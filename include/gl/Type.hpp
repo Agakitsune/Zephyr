@@ -23,7 +23,9 @@ namespace zephyr::gl {
         PixelUnpackBuffer = GL_PIXEL_UNPACK_BUFFER,
         QueryBuffer = GL_QUERY_BUFFER,
         TextureBuffer = GL_TEXTURE_BUFFER,
-        AtomicCounterBuffer = GL_ATOMIC_COUNTER_BUFFER
+        AtomicCounterBuffer = GL_ATOMIC_COUNTER_BUFFER,
+        DispatchIndirectBuffer = GL_DISPATCH_INDIRECT_BUFFER,
+        DrawIndirectBuffer = GL_DRAW_INDIRECT_BUFFER
     };
 
     enum class BufferUsage : GLenum {
@@ -236,11 +238,41 @@ namespace zephyr::gl {
         ClampToBorder = GL_CLAMP_TO_BORDER
     };
 
+    enum class TextureParameterName : GLenum {
+        DepthStencilTextureMode = GL_DEPTH_STENCIL_TEXTURE_MODE,
+        BaseLevel = GL_TEXTURE_BASE_LEVEL,
+        CompareFunc = GL_TEXTURE_COMPARE_FUNC,
+        CompareMode = GL_TEXTURE_COMPARE_MODE,
+        LodBias = GL_TEXTURE_LOD_BIAS,
+        MinFilter = GL_TEXTURE_MIN_FILTER,
+        MagFilter = GL_TEXTURE_MAG_FILTER,
+        MinLod = GL_TEXTURE_MIN_LOD,
+        MaxLod = GL_TEXTURE_MAX_LOD,
+        MaxLevel = GL_TEXTURE_MAX_LEVEL,
+        SwizzleR = GL_TEXTURE_SWIZZLE_R,
+        SwizzleG = GL_TEXTURE_SWIZZLE_G,
+        SwizzleB = GL_TEXTURE_SWIZZLE_B,
+        SwizzleA = GL_TEXTURE_SWIZZLE_A,
+        WrapS = GL_TEXTURE_WRAP_S,
+        WrapT = GL_TEXTURE_WRAP_T,
+        WrapR = GL_TEXTURE_WRAP_R,
+        BorderColor = GL_TEXTURE_BORDER_COLOR,
+        SwizzleRGBA = GL_TEXTURE_SWIZZLE_RGBA
+    };
+
     enum class TextureFormat : GLenum {
         Red = GL_RED,
         RG = GL_RG,
         RGB = GL_RGB,
         RGBA = GL_RGBA,
+        BGRA = GL_BGRA,
+        RedInteger = GL_RED_INTEGER,
+        RGInteger = GL_RG_INTEGER,
+        RGBInteger = GL_RGB_INTEGER,
+        RGBAInteger = GL_RGBA_INTEGER,
+        BGRInteger = GL_BGR_INTEGER,
+        BGRAInteger = GL_BGRA_INTEGER,
+        Stencil = GL_STENCIL_INDEX,
         Depth = GL_DEPTH_COMPONENT,
         DepthStencil = GL_DEPTH_STENCIL
     };
@@ -354,10 +386,53 @@ namespace zephyr::gl {
         UnsignedInt2101010Rev = GL_UNSIGNED_INT_2_10_10_10_REV
     };
 
+    enum class VertexAttributeType : GLenum {
+        Byte = GL_BYTE,
+        UnsignedByte = GL_UNSIGNED_BYTE,
+        Short = GL_SHORT,
+        UnsignedShort = GL_UNSIGNED_SHORT,
+        Int = GL_INT,
+        UnsignedInt = GL_UNSIGNED_INT,
+        HalfFloat = GL_HALF_FLOAT,
+        Float = GL_FLOAT,
+        Double = GL_DOUBLE,
+        Fixed = GL_FIXED,
+        Int2101010Rev = GL_INT_2_10_10_10_REV,
+        UnsignedInt2101010Rev = GL_UNSIGNED_INT_2_10_10_10_REV,
+        UnsignedInt10f11f11fRev = GL_UNSIGNED_INT_10F_11F_11F_REV
+    };
+
+    enum class DrawMode : GLenum {
+        Points = GL_POINTS,
+        LineStrip = GL_LINE_STRIP,
+        LineLoop = GL_LINE_LOOP,
+        Lines = GL_LINES,
+        LineStripAdjacency = GL_LINE_STRIP_ADJACENCY,
+        LinesAdjacency = GL_LINES_ADJACENCY,
+        TriangleStrip = GL_TRIANGLE_STRIP,
+        TriangleFan = GL_TRIANGLE_FAN,
+        Triangles = GL_TRIANGLES,
+        TriangleStripAdjacency = GL_TRIANGLE_STRIP_ADJACENCY,
+        TrianglesAdjacency = GL_TRIANGLES_ADJACENCY,
+        Patches = GL_PATCHES
+    };
+
+    enum class ClearMask : GLenum {
+        Color = GL_COLOR_BUFFER_BIT,
+        Depth = GL_DEPTH_BUFFER_BIT,
+        Stencil = GL_STENCIL_BUFFER_BIT,
+        ColorDepth = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT,
+        DepthStencil = GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT,
+        ColorStencil = GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT,
+        ColorDepthStencil = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT
+    };
+
+    
+
 }
 
-template<typename E>
-concept isGlEnum = std::is_enum_v<E> && std::same_as<std::underlying_type_t<E>, GLenum>;
+// template<typename E>
+// concept isGlEnum = std::is_enum_v<E> && std::same_as<std::underlying_type_t<E>, GLenum>;
 
 template<typename E>
 E operator+(const E &e, const int &i) {
@@ -368,7 +443,7 @@ E operator+(const E &e, const int &i) {
 // concept isGlEnumClass = std::is_enum_v<E> && std::same_as<std::underlying_type_t<E>, GLenum> && std::is_class_v<E>;
 
 template<typename E>
-requires isGlEnum<E>
+// requires isGlEnum<E>
 GLenum glEnum(const E &e) {
     return static_cast<GLenum>(e);
 }

@@ -13,6 +13,8 @@ namespace zephyr::glfw {
         }
         handle = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
         defaultHints = true;
+
+        glfwMakeContextCurrent(handle);
     }
 
     Window::Window(int width, int height, std::string &&title) {
@@ -25,18 +27,22 @@ namespace zephyr::glfw {
         }
         handle = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
         defaultHints = true;
+
+        glfwMakeContextCurrent(handle);
     }
 
     Window::Window(int width, int height, const char *title) {
         if (!init)
             glfwInit();
         if (defaultHints) {
-            glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-            glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+            glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+            glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
             glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         }
         handle = glfwCreateWindow(width, height, title, nullptr, nullptr);
         defaultHints = true;
+
+        glfwMakeContextCurrent(handle);
     }
 
     Window::Window(Window &&other) noexcept {
@@ -128,6 +134,14 @@ namespace zephyr::glfw {
 
     void Window::swapBuffers() const {
         glfwSwapBuffers(handle);
+    }
+
+    void Window::drawArrays(gl::DrawMode mode, GLint first, GLsizei count) const {
+        glDrawArrays(static_cast<GLenum>(mode), first, count);
+    }
+
+    void Window::clear(gl::ClearMask mask) const {
+        glClear(static_cast<GLbitfield>(mask));
     }
 
     void Window::setHint(WindowAttribute attrib, int value) {

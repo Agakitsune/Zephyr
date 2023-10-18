@@ -23,6 +23,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 file(GLOB SOURCE
     ${PROJECT_SOURCE_DIR}/src/gl/*.cpp
     ${PROJECT_SOURCE_DIR}/src/glfw/*.cpp
+    ${PROJECT_SOURCE_DIR}/src/utils/*.cpp
 )
 
 add_library(${PROJECT_NAME} SHARED ${SOURCE})

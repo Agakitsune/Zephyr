@@ -4,6 +4,7 @@
 #include <string>
 
 #include "gl/Utils.hpp"
+#include "gl/Type.hpp"
 
 #include "math/vector.hpp"
 
@@ -98,7 +99,12 @@ namespace zephyr::glfw {
             void pollEvents() const;
             void waitEvents() const;
             void waitEvents(double timeout) const;
+            
             void swapBuffers() const;
+
+            void drawArrays(gl::DrawMode mode, GLint first, GLsizei count) const;
+
+            void clear(gl::ClearMask mask) const;
 
             static void setHint(WindowAttribute attrib, int value);
             static void setHint(WindowAttribute attrib, const std::string &value);
