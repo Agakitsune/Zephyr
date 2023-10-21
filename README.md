@@ -1,29 +1,53 @@
+# Zephyr 0.0.3 - 21/10/2023
+
+### Changed Vector Implementation
+
+* `zephyr::math`
+
+    :green_circle: Usage of `std::experimental::simd` for parallelization
+
+    :green_circle: New function `swizzle()` - returns a new vector with the specified components
+
+    :red_circle: Removed type `dynamic_vector`
+
+    :red_circle: Removed `operator[]` and  for `vector` type
+
 # Zephyr 0.0.2 - 18/10/2023
 
 ### Simple GL Wrapper
 
-* Added Internal Library `gl`
+:green_circle: Added Internal Library `gl`
 
-    * New Type `Buffer`
+:green_circle: Added Internal Library `utils`
 
-    * New Type `Program`
+* `zephyr::gl`
 
-    * New Type `Shader`
+    :green_circle: New type `Buffer`
 
-    * New Type `Texture`
+    :green_circle: New type `Program`
 
-    * New Type `Uniform`
+    :green_circle: New type `Shader`
 
-    * New Type `VertexArray`
+    :green_circle: New type `Texture`
 
-* Added Internal Library `utils`
+    :green_circle: New type `Uniform`
+
+    :green_circle: New type `VertexArray`
+
+* `zephyr::utils`
+
+    :green_circle: New function `loadTexture()` - loads a 2D Texture from a file
+
+    :green_circle: New function `loadShader()`
 
 # Zephyr 0.0.1 - 16/10/2023
 
 ### Simple GLFW Window Wrapper
 
-* Added Internal Library `glfw`
+:green_circle: Added Internal Library `glfw`
 
-    * New Type `Window`
+:green_circle: Added Internal Library `math`
 
-* Added Internal Library `math`
+* `zephyr::glfw`
+
+    :green_circle: New type `Window`

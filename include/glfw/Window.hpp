@@ -6,7 +6,7 @@
 #include "gl/Utils.hpp"
 #include "gl/Type.hpp"
 
-#include "math/vector.hpp"
+#include "math/math.hpp"
 
 namespace zephyr::glfw {
     

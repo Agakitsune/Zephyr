@@ -5,7 +5,7 @@
 
 #include "Utils.hpp"
 #include "Type.hpp"
-#include "math/vector.hpp"
+#include "math/math.hpp"
 
 namespace zephyr::gl {
 

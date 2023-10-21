@@ -4,7 +4,7 @@
 #include <type_traits>
 
 #include "gl/VertexArray.hpp"
-#include "math/vector.hpp"
+#include "math/math.hpp"
 
 namespace zephyr::utils {
 

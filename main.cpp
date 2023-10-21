@@ -4,7 +4,7 @@
 #include <cstring>
 #include <stdio.h>
 
-#include "math/vector.hpp"
+#include "math/math.hpp"
 
 #include "glfw/Window.hpp"
 
@@ -18,63 +18,80 @@
 #include "utils/VertexArray.hpp"
 #include "utils/Texture.hpp"
 
+#include <experimental/simd>
+
 int main(void) {
 
-    zephyr::glfw::Window window(800, 600, "WindowTest");
+    zephyr::math::vec2i a(1, 2);
+    auto b = zephyr::math::swizzle<zephyr::math::arg::Y, zephyr::math::arg::X>(a);
+    std::cout << b << std::endl;
+    auto c = zephyr::math::swizzle(a, zephyr::math::arg::Y(), zephyr::math::arg::X(), zephyr::math::arg::Y(), zephyr::math::arg::Y(), zephyr::math::arg::Y());
+    std::cout << c << std::endl;
 
-    glewExperimental = true;
-    if (glewInit() != GLEW_OK)
-        throw std::runtime_error("Could not initialize GLEW");
+    // std::cout << zephyr::math::_meta::argumentSize<decltype(c), int>::value << std::endl;
 
-    zephyr::gl::Texture tex = zephyr::utils::loadTexture("../cloud.png");
+    zephyr::math::vector<6, int> e(c, 4);
+    std::cout << e << std::endl;
 
-    zephyr::gl::Shader vert = zephyr::utils::loadShader("../shader.vs", zephyr::gl::ShaderType::Vertex);
-    zephyr::gl::Shader frag = zephyr::utils::loadShader("../shader.fs", zephyr::gl::ShaderType::Fragment);
+    // zephyr::glfw::Window window(800, 600, "WindowTest");
 
-    zephyr::gl::Program prog;
+    // glewExperimental = true;
+    // if (glewInit() != GLEW_OK)
+    //     throw std::runtime_error("Could not initialize GLEW");
 
-    prog.attach(vert);
-    prog.attach(frag);
+    // zephyr::gl::Texture tex = zephyr::utils::loadTexture("../cloud.png");
 
-    prog.link();
+    // zephyr::gl::Shader vert = zephyr::utils::loadShader("../shader.vs", zephyr::gl::ShaderType::Vertex);
+    // zephyr::gl::Shader frag = zephyr::utils::loadShader("../shader.fs", zephyr::gl::ShaderType::Fragment);
 
-    tex.activate(0);
+    // zephyr::gl::Program prog;
 
-    zephyr::gl::Uniform uni = prog.getUniform("tex");
+    // prog.attach(vert);
+    // prog.attach(frag);
 
-    float vertices[] = {
-        -1.0f, -1.0f, 0.0f,     1.0f, 0.5f, 1.0f,       0.0f, 1.0f,
-        1.0f, -1.0f, 0.0f,      0.5f, 0.5f, 1.0f,       1.0f, 1.0f,
-        -1.0f,  1.0f, 0.0f,      0.5f, 1.5f, 1.0f,       0.0f, 0.0f,
-        1.0f,  1.0f, 0.0f,      0.5f, 1.5f, 1.0f,       1.0f, 0.0f,
-    };  
+    // prog.link();
 
-    zephyr::gl::VertexArray VAO;
-    VAO.bind();
+    // tex.activate(0);
 
-    zephyr::gl::Buffer VBO;
+    // zephyr::gl::Uniform uni = prog.getUniform("tex");
 
-    VBO.bind(zephyr::gl::BufferTarget::ArrayBuffer);
-    VBO.data(vertices, zephyr::gl::BufferUsage::StaticDraw);
+    // float vertices[] = {
+    //     -1.0f, -1.0f, 0.0f,     1.0f, 0.0f, 0.0f,       0.0f, 1.0f,
+    //     1.0f, -1.0f, 0.0f,      1.0f, 0.0f, 1.0f,       1.0f, 1.0f,
+    //     -1.0f,  1.0f, 0.0f,      0.0f, 1.0f, 1.0f,       0.0f, 0.0f,
+    //     1.0f,  1.0f, 0.0f,      1.0f, 1.0f, 0.0f,       1.0f, 0.0f,
+    // };  
 
-    zephyr::utils::useVertex<zephyr::math::vec3f, zephyr::math::vec3f, zephyr::math::vec2f>(0);
+    // zephyr::math::vec2f a(4, 4);
+    // zephyr::math::vec2f b(4, 4);
+    // // zephyr::math::vec2f c = a % b;
 
-    while (!window.shouldClose()) {
-        window.pollEvents();
+    // zephyr::gl::VertexArray VAO;
+    // VAO.bind();
 
-        window.clear(zephyr::gl::ClearMask::Color);
+    // zephyr::gl::Buffer VBO;
 
-        tex.activate(0);
+    // VBO.bind(zephyr::gl::BufferTarget::ArrayBuffer);
+    // VBO.data(vertices, zephyr::gl::BufferUsage::StaticDraw);
 
-        prog.use();
-        uni.set(0);
+    // zephyr::utils::useVertex<zephyr::math::vec3f, zephyr::math::vec3f, zephyr::math::vec2f>(0);
+
+    // while (!window.shouldClose()) {
+    //     window.pollEvents();
+
+    //     window.clear(zephyr::gl::ClearMask::Color);
+
+    //     tex.activate(0);
+
+    //     prog.use();
+    //     uni.set(0);
         
-        VAO.bind();
-        window.drawArrays(zephyr::gl::DrawMode::TriangleStrip, 0, 4);
-        window.swapBuffers();
-    }
+    //     VAO.bind();
+    //     window.drawArrays(zephyr::gl::DrawMode::TriangleStrip, 0, 4);
+    //     window.swapBuffers();
+    // }
 
-    glfwTerminate();
+    // glfwTerminate();
 
     return 0;
 }
