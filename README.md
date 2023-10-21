@@ -1,4 +1,4 @@
-# Zephyr 0.0.3 - 21/10/2023
+# Zephyr 0.3 - 21/10/2023
 
 ### Changed Vector Implementation
 
@@ -12,7 +12,7 @@
 
     :red_circle: Removed `operator[]` and  for `vector` type
 
-# Zephyr 0.0.2 - 18/10/2023
+# Zephyr 0.2 - 18/10/2023
 
 ### Simple GL Wrapper
 
@@ -40,7 +40,7 @@
 
     :green_circle: New function `loadShader()`
 
-# Zephyr 0.0.1 - 16/10/2023
+# Zephyr 0.1 - 16/10/2023
 
 ### Simple GLFW Window Wrapper
 
