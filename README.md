@@ -1,3 +1,11 @@
+# Zephyr 0.4 - 22/10/2023
+
+### Added `zephyr::math::matrix`
+
+* `zephyr::math`
+
+    :green_circle: New type `matrix`
+
 # Zephyr 0.3 - 21/10/2023
 
 ### Changed Vector Implementation

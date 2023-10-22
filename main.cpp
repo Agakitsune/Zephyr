@@ -22,16 +22,18 @@
 
 int main(void) {
 
-    zephyr::math::vec2i a(1, 2);
-    auto b = zephyr::math::swizzle<zephyr::math::arg::Y, zephyr::math::arg::X>(a);
-    std::cout << b << std::endl;
-    auto c = zephyr::math::swizzle(a, zephyr::math::arg::Y(), zephyr::math::arg::X(), zephyr::math::arg::Y(), zephyr::math::arg::Y(), zephyr::math::arg::Y());
-    std::cout << c << std::endl;
+    zephyr::math::matrix<2, 3, float> a(
+        1, 2, 3,
+        4, 5, 6
+    );
 
-    // std::cout << zephyr::math::_meta::argumentSize<decltype(c), int>::value << std::endl;
+    zephyr::math::matrix<2, 3, float> b(
+        1, 2, 3,
+        4, 5, 6
+    );
 
-    zephyr::math::vector<6, int> e(c, 4);
-    std::cout << e << std::endl;
+    a += b;
+    std::cout << a << std::endl;
 
     // zephyr::glfw::Window window(800, 600, "WindowTest");
 
