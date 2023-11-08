@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.22)
 project(zephyr)
 
+include(FetchContent)
+
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -21,17 +23,62 @@ file(GLOB SOURCE
 
 add_library(${PROJECT_NAME} SHARED ${SOURCE})
 
+find_package(OpenGL REQUIRED)
+
+if (NOT OPENGL_FOUND)
+    message(FATAL_ERROR "OpenGL not found")
+endif()
+
+set(GLEW_VERBOSE ON)
+find_package(GLEW REQUIRED)
+
+if (NOT GLEW_FOUND)
+message(FATAL_ERROR "GLEW not found")
+endif()
+
+find_library(GLFW_LIBRARIES glfw DOC "GLFW library" REQUIRED)
+
+if (NOT GLFW_LIBRARIES)
+    set(GLFW_FOUND FALSE)
+else()
+    set(GLFW_FOUND TRUE)
+    message("-- GLFW found: ${GLFW_LIBRARIES}")
+endif()
+
+if (NOT GLFW_FOUND)
+    FetchContent_Declare(
+        glfw
+        GIT_REPOSITORY https://github.com/glfw/glfw
+    )
+
+    FetchContent_GetProperties(glfw)
+    if(NOT glfw_POPULATED)
+        FetchContent_Populate(glfw)
+
+        set(GLFW_BUILD_EXAMPLES OFF CACHE INTERNAL "Build the GLFW example programs")
+        set(GLFW_BUILD_TESTS OFF CACHE INTERNAL "Build the GLFW test programs")
+        set(GLFW_BUILD_DOCS OFF CACHE INTERNAL "Build the GLFW documentation")
+        set(GLFW_INSTALL OFF CACHE INTERNAL "Generate installation target")
+
+        add_subdirectory(${glfw_SOURCE_DIR} ${glfw_BINARY_DIR})
+    endif()
+
+    set(GLFW_LIBRARIES glfw)
+endif()
+
 target_include_directories(${PROJECT_NAME}
     PUBLIC
         ${PROJECT_SOURCE_DIR}/include
-        ${imgui_SOURCE_DIR}
+        ${GLEW_INCLUDE_DIRS}
+        ${OPENGL_INCLUDE_DIRS}
+        ${GLFW_INCLUDE_DIRS}
 )
 
 target_link_libraries(${PROJECT_NAME}
     PUBLIC
-        GL
-        GLEW
-        glfw
+        ${OPENGL_LIBRARIES}
+        ${GLEW_LIBRARIES}
+        ${GLFW_LIBRARIES}
 )
 
 if (LINUX AND NOT APPLE AND ${USE_EXPERIMENTAL})
