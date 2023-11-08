@@ -17,20 +17,37 @@ namespace zephyr::math {
         public:
             using type = T;
 
-            union {
-                struct {
+            #ifdef ZEPHYR_USE_ANONYMOUS
+                // Use to ignore error since anonymous struct is forbidden by C++ ISO standard
+                #pragma GCC diagnostic push
+                #pragma GCC diagnostic ignored "-Wpedantic"
+
+                union {
+                    struct {
+                        T x;
+                        T y;
+                    };
+                    struct {
+                        T r;
+                        T g;
+                    };
+                    struct {
+                        T s;
+                        T t;
+                    };
+                };
+            #else
+                union {
                     T x;
-                    T y;
-                };
-                struct {
                     T r;
-                    T g;
-                };
-                struct {
                     T s;
+                };
+                union {
+                    T y;
+                    T g;
                     T t;
                 };
-            };
+            #endif
 
             constexpr size_t size() const {
                 return 2;

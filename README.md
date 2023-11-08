@@ -1,3 +1,9 @@
+# Zephyr 0.5.1 - 08/11/2023
+
+### Added define `ZEPHYR_USE_ANONYMOUS`
+
+* New define `ZEPHYR_USE_ANONYMOUS` - enables anonymous structs and unions
+
 # Zephyr 0.5.0 - 08/11/2023
 
 ### Added define `ZEPHYR_EXPERIMENTAL`
