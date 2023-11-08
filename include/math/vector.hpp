@@ -5,7 +5,11 @@
 #include <cstring>
 #include <stdexcept>
 #include <type_traits>
-#include <experimental/simd>
+
+#ifdef ZEPHYR_EXPERIMENTAL
+    #include <experimental/simd>
+#endif
+
 #include <cmath>
 #include <cstring>
 
@@ -19,19 +23,32 @@ namespace zephyr::math {
         T _data[N];
 
         template<typename Ts>
-        requires std::is_arithmetic_v<Ts> && std::is_convertible_v<Ts, T>
         constexpr void _set(size_t offset, Ts v) {
             _data[offset] = static_cast<T>(v);
         }
 
         template<size_t M, typename Ts>
-        requires std::is_convertible_v<Ts, T>
         constexpr void _set(size_t offset, const vector<M, Ts> &v) {
             const Ts *data = v.data();
             for (size_t i = 0; i < M; ++i) {
                 _data[offset + i] = static_cast<T>(data[i]);
             }
         }
+
+        constexpr void _set(size_t offset, T v) {
+            _data[offset] = v;
+        }
+
+        #ifdef ZEPHYR_EXPERIMENTAL
+            template<typename U, size_t... M>
+            requires (sizeof...(M) == N)
+            constexpr void _set(const std::experimental::fixed_size_simd<U, N> &simd, std::index_sequence<M...>) {
+                (
+                    (this->_data[M] = static_cast<T>(simd[M])),
+                    ...
+                );
+            }
+        #endif
 
         public:
             using type = T;
@@ -50,7 +67,6 @@ namespace zephyr::math {
             // Conversion copy&move constructors
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
             constexpr vector(const vector<N, U> &other) {
                 for (size_t i = 0; i < N; ++i) {
                     _data[i] = static_cast<T>(other._data[i]);
@@ -58,7 +74,6 @@ namespace zephyr::math {
             }
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
             constexpr vector(vector<N, U> &&other) {
                 for (size_t i = 0; i < N; ++i) {
                     _data[i] = static_cast<T>(other._data[i]);
@@ -73,12 +88,8 @@ namespace zephyr::math {
                 }
             }
 
-            template<typename... Ts>
-            requires std::conjunction_v<std::is_same<Ts, T>...> && (sizeof...(Ts) == N)
-            explicit constexpr vector(Ts... v) : _data{v...} {}
-
             template<typename... Vs>
-            requires (_meta::argumentSize<std::remove_cvref_t<Vs>...>::value == N) && std::negation_v<std::conjunction<std::is_same<std::remove_cvref_t<Vs>, T>...>>
+            requires (_meta::argumentSize<std::remove_cvref_t<Vs>...>::value == N)
             explicit constexpr vector(Vs&&... v) {
                 size_t off = 0;
                 ([&] {
@@ -90,7 +101,7 @@ namespace zephyr::math {
             // Conversions from other vector types
 
             template<size_t M, typename U>
-            requires std::is_convertible_v<U, T> && (M > N)
+            requires (M > N)
             explicit constexpr vector(const vector<M, U> &other) {
                 for (size_t i = 0; i < N; ++i) {
                     _data[i] = static_cast<T>(other._data[i]);
@@ -100,7 +111,6 @@ namespace zephyr::math {
             // Assignments
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
             constexpr vector<N, T> &operator=(const vector<N, U> &other) {
                 for (size_t i = 0; i < N; ++i) {
                     _data[i] = static_cast<T>(other._data[i]);
@@ -109,7 +119,6 @@ namespace zephyr::math {
             }
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
             constexpr vector<N, T> &operator=(vector<N, U> &&other) {
                 for (size_t i = 0; i < N; ++i) {
                     _data[i] = static_cast<T>(other._data[i]);
@@ -120,104 +129,152 @@ namespace zephyr::math {
             // Unary Scalar Arithmetic operators
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
             constexpr vector<N, T> &operator+=(U scalar) {
-                std::experimental::fixed_size_simd<T, N> a(this->data(), std::experimental::vector_aligned);
-                const std::experimental::fixed_size_simd<T, N> b(static_cast<T>(scalar));
-                a += b;
-                a.copy_to(this->data(), std::experimental::vector_aligned);
+                #ifdef ZEPHYR_EXPERIMNETAL
+                    std::experimental::fixed_size_simd<U, N> a([this](int i) { return static_cast<U>(this->data()[i]); });
+                    const std::experimental::fixed_size_simd<U, N> b(scalar);
+                    a += b;
+                    _set(a, std::make_index_sequence<N>{});
+                #else
+                    for (size_t i = 0; i < N; ++i) {
+                        _data[i] += scalar;
+                    }
+                #endif
                 return *this;
             }
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
             constexpr vector<N, T> &operator-=(U scalar) {
-                std::experimental::fixed_size_simd<T, N> a(this->data(), std::experimental::vector_aligned);
-                const std::experimental::fixed_size_simd<T, N> b(static_cast<T>(scalar));
-                a -= b;
-                a.copy_to(this->data(), std::experimental::vector_aligned);
+                #ifdef ZEPHYR_EXPERIMNETAL
+                    std::experimental::fixed_size_simd<U, N> a([this](int i) { return static_cast<U>(this->data()[i]); });
+                    const std::experimental::fixed_size_simd<U, N> b(scalar);
+                    a -= b;
+                    _set(a, std::make_index_sequence<N>{});
+                #else
+                    for (size_t i = 0; i < N; ++i) {
+                        _data[i] -= scalar;
+                    }
+                #endif
                 return *this;
             }
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
             constexpr vector<N, T> &operator*=(U scalar) {
-                std::experimental::fixed_size_simd<T, N> a(this->data(), std::experimental::vector_aligned);
-                const std::experimental::fixed_size_simd<T, N> b(static_cast<T>(scalar));
-                a *= b;
-                a.copy_to(this->data(), std::experimental::vector_aligned);
+                #ifdef ZEPHYR_EXPERIMNETAL
+                    std::experimental::fixed_size_simd<U, N> a([this](int i) { return static_cast<U>(this->data()[i]); });
+                    const std::experimental::fixed_size_simd<U, N> b(scalar);
+                    a *= b;
+                    _set(a, std::make_index_sequence<N>{});
+                #else
+                    for (size_t i = 0; i < N; ++i) {
+                        _data[i] *= scalar;
+                    }
+                #endif
                 return *this;
             }
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
             constexpr vector<N, T> &operator/=(U scalar) {
-                std::experimental::fixed_size_simd<T, N> a(this->data(), std::experimental::vector_aligned);
-                const std::experimental::fixed_size_simd<T, N> b(static_cast<T>(scalar));
-                a /= b;
-                a.copy_to(this->data(), std::experimental::vector_aligned);
+                #ifdef ZEPHYR_EXPERIMNETAL
+                    std::experimental::fixed_size_simd<U, N> a([this](int i) { return static_cast<U>(this->data()[i]); });
+                    const std::experimental::fixed_size_simd<U, N> b(scalar);
+                    a /= b;
+                    _set(a, std::make_index_sequence<N>{});
+                #else
+                    for (size_t i = 0; i < N; ++i) {
+                        _data[i] /= scalar;
+                    }
+                #endif
                 return *this;
             }
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
             constexpr vector<N, T> &operator%=(U scalar) {
-                std::experimental::fixed_size_simd<T, N> a(this->data(), std::experimental::vector_aligned);
-                const std::experimental::fixed_size_simd<T, N> b(static_cast<T>(scalar));
-                a %= b;
-                a.copy_to(this->data(), std::experimental::vector_aligned);
+                #ifdef ZEPHYR_EXPERIMNETAL
+                    std::experimental::fixed_size_simd<U, N> a([this](int i) { return static_cast<U>(this->data()[i]); });
+                    const std::experimental::fixed_size_simd<U, N> b(scalar);
+                    a %= b;
+                    _set(a, std::make_index_sequence<N>{});
+                #else
+                    for (size_t i = 0; i < N; ++i) {
+                        _data[i] %= scalar;
+                    }
+                #endif
                 return *this;
             }
 
             // Bitwise operators
 
             template<typename U>
-            requires std::is_integral_v<U>
             constexpr vector<N, T> &operator&=(U scalar) {
-                std::experimental::fixed_size_simd<T, N> a(this->data(), std::experimental::vector_aligned);
-                const std::experimental::fixed_size_simd<U, N> b(scalar);
-                a &= b;
-                a.copy_to(this->data(), std::experimental::vector_aligned);
+                #ifdef ZEPHYR_EXPERIMENTAL
+                    std::experimental::fixed_size_simd<T, N> a(this->data(), std::experimental::vector_aligned);
+                    const std::experimental::fixed_size_simd<U, N> b(scalar);
+                    a &= b;
+                    a.copy_to(this->data(), std::experimental::vector_aligned);
+                #else
+                    for (size_t i = 0; i < N; ++i) {
+                        _data[i] &= scalar;
+                    }
+                #endif
                 return *this;
             }
 
             template<typename U>
-            requires std::is_integral_v<U>
             constexpr vector<N, T> &operator|=(U scalar) {
-                std::experimental::fixed_size_simd<T, N> a(this->data(), std::experimental::vector_aligned);
-                const std::experimental::fixed_size_simd<U, N> b(scalar);
-                a |= b;
-                a.copy_to(this->data(), std::experimental::vector_aligned);
+                #ifdef ZEPHYR_EXPERIMENTAL
+                    std::experimental::fixed_size_simd<T, N> a(this->data(), std::experimental::vector_aligned);
+                    const std::experimental::fixed_size_simd<U, N> b(scalar);
+                    a |= b;
+                    a.copy_to(this->data(), std::experimental::vector_aligned);
+                #else
+                    for (size_t i = 0; i < N; ++i) {
+                        _data[i] |= scalar;
+                    }
+                #endif
                 return *this;
             }
 
             template<typename U>
-            requires std::is_integral_v<U>
             constexpr vector<N, T> &operator^=(U scalar) {
-                std::experimental::fixed_size_simd<T, N> a(this->data(), std::experimental::vector_aligned);
-                const std::experimental::fixed_size_simd<U, N> b(scalar);
-                a ^= b;
-                a.copy_to(this->data(), std::experimental::vector_aligned);
+                #ifdef ZEPHYR_EXPERIMENTAL
+                    std::experimental::fixed_size_simd<T, N> a(this->data(), std::experimental::vector_aligned);
+                    const std::experimental::fixed_size_simd<U, N> b(scalar);
+                    a ^= b;
+                    a.copy_to(this->data(), std::experimental::vector_aligned);
+                #else
+                    for (size_t i = 0; i < N; ++i) {
+                        _data[i] ^= scalar;
+                    }
+                #endif
                 return *this;
             }
 
             template<typename U>
-            requires std::is_integral_v<U>
             constexpr vector<N, T> &operator<<=(U scalar) {
-                std::experimental::fixed_size_simd<T, N> a(this->data(), std::experimental::vector_aligned);
-                const std::experimental::fixed_size_simd<U, N> b(scalar);
-                a <<= b;
-                a.copy_to(this->data(), std::experimental::vector_aligned);
+                #ifdef ZEPHYR_EXPERIMENTAL
+                    std::experimental::fixed_size_simd<T, N> a(this->data(), std::experimental::vector_aligned);
+                    a <<= scalar;
+                    a.copy_to(this->data(), std::experimental::vector_aligned);
+                #else
+                    for (size_t i = 0; i < N; ++i) {
+                        _data[i] <<= scalar;
+                    }
+                #endif
                 return *this;
             }
 
             template<typename U>
-            requires std::is_integral_v<U>
             constexpr vector<N, T> &operator>>=(U scalar) {
-                std::experimental::fixed_size_simd<T, N> a(this->data(), std::experimental::vector_aligned);
-                const std::experimental::fixed_size_simd<U, N> b(scalar);
-                a >>= b;
-                a.copy_to(this->data(), std::experimental::vector_aligned);
+                #ifdef ZEPHYR_EXPERIMENTAL
+                    std::experimental::fixed_size_simd<T, N> a(this->data(), std::experimental::vector_aligned);
+                    a >>= scalar;
+                    a.copy_to(this->data(), std::experimental::vector_aligned);
+                #else
+                    for (size_t i = 0; i < N; ++i) {
+                        _data[i] >>= scalar;
+                    }
+                #endif
                 return *this;
             }
 
@@ -245,6 +302,18 @@ namespace zephyr::math {
 
             constexpr const T *data() const {
                 return this->_data;
+            }
+
+            T &operator[](size_t i) {
+                if (i >= N)
+                    throw std::out_of_range("Index out of range");
+                return this->_data[i];
+            }
+
+            const T &operator[](size_t i) const {
+                if (i >= N)
+                    throw std::out_of_range("Index out of range");
+                return this->_data[i];
             }
     };
 

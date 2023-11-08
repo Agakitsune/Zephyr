@@ -1,24 +1,17 @@
 cmake_minimum_required(VERSION 3.22)
 project(zephyr)
 
-# include(FetchContent)
-
-# function(downloadFile url name_)
-
-#     FetchContent_Declare(${name_}
-#         URL ${url}
-#     )
-
-#     FetchContent_Populate(${name_})
-
-# endfunction(downloadFile)
-
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# downloadFile("https://github.com/ocornut/imgui/archive/refs/heads/docking.zip" IMGUI)
+set(USE_EXPERIMENTAL OFF CACHE BOOL "Usage of experimental C++ features (std::experimental) in Zephyr")
 
-# FetchContent_MakeAvailable(IMGUI)
+if (${USE_EXPERIMENTAL})
+    message(
+        WARNING
+"Enabling Zephyr experimental features
+Please note that this may cause compilation errors on Windows systems")
+endif()
 
 file(GLOB SOURCE
     ${PROJECT_SOURCE_DIR}/src/gl/*.cpp
@@ -41,8 +34,15 @@ target_link_libraries(${PROJECT_NAME}
         glfw
 )
 
+if (LINUX AND NOT APPLE AND ${USE_EXPERIMENTAL})
+    target_compile_options(${PROJECT_NAME}
+        PUBLIC
+            -DZEPHYR_EXPERIMENTAL
+    )
+endif()
+
 if (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
-    if (UNIX)
+    if (LINUX AND NOT APPLE)
         target_compile_options(${PROJECT_NAME}
             PUBLIC
                 -ggdb

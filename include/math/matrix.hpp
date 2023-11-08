@@ -359,6 +359,34 @@ namespace zephyr::math {
         return temp;
     }
 
+    // Binary Skew Vector Arithmetic operators
+
+    template<size_t M, size_t N, size_t O, typename T, typename U>
+    requires std::is_convertible_v<U, T> && (N > O)
+    constexpr vector<O, T> operator*(const matrix<M, N, T> &mat, const vector<O, U> &vec) {
+        vector<O, T> temp;
+        for (size_t i = 0; i < O; ++i) {
+            temp[i] = 0;
+            for (size_t j = 0; j < O; ++j) {
+                temp[i] += mat[i][j] * vec[j];
+            }
+        }
+        return temp;
+    }
+
+    template<size_t M, size_t N, size_t O, typename T, typename U>
+    requires std::is_convertible_v<U, T> && (M > O)
+    constexpr vector<O, T> operator*(const vector<O, U> &vec, const matrix<M, N, T> &mat) {
+        vector<O, T> temp;
+        for (size_t i = 0; i < O; ++i) {
+            temp[i] = 0;
+            for (size_t j = 0; j < O; ++j) {
+                temp[i] += vec[j] * mat[i][j];
+            }
+        }
+        return temp;
+    }
+
     // Misc operations
 
     template<size_t M, size_t N, typename T>
@@ -369,6 +397,135 @@ namespace zephyr::math {
                 temp[j][i] = mat[i][j];
             }
         }
+        return temp;
+    }
+
+    // Transformation
+
+    template<typename T>
+    matrix<4, 4, T> translate(const matrix<4, 4, T> &mat, const vector<3, T> &vec) {
+        matrix<4, 4, T> temp = mat;
+        temp[0][3] = temp[0][0] + temp[0][3] * vec.x;
+        temp[1][3] = temp[1][0] + temp[1][3] * vec.y;
+        temp[2][3] = temp[2][0] + temp[2][3] * vec.z;
+        return temp;
+    }
+
+    template<typename T>
+    matrix<4, 4, T> rotationX(const matrix<4, 4, T> &mat, T angle) {
+        const T c = std::cos(angle);
+        const T s = std::sin(angle);
+
+        matrix<4, 4, T> temp = mat;
+
+        temp[0][1] = c * mat[0][1] + s * mat[0][2];
+        temp[0][2] = -s * mat[0][1] + c * mat[0][2];
+
+        temp[1][1] = c * mat[1][1] + s * mat[1][2];
+        temp[1][2] = -s * mat[1][1] + c * mat[1][2];
+
+        temp[2][1] = c * mat[2][1] + s * mat[2][2];
+        temp[2][2] = -s * mat[2][1] + c * mat[2][2];
+
+        temp[3][1] = c * mat[3][1] + s * mat[3][2];
+        temp[3][2] = -s * mat[3][1] + c * mat[3][2];
+
+        return temp;
+    }
+
+    template<typename T>
+    matrix<4, 4, T> rotationY(const matrix<4, 4, T> &mat, T angle) {
+        const T c = std::cos(angle);
+        const T s = std::sin(angle);
+
+        matrix<4, 4, T> temp = mat;
+
+        temp[0][0] = c * mat[0][0] - s * mat[0][2];
+        temp[0][2] = s * mat[0][0] + c * mat[0][2];
+
+        temp[1][0] = c * mat[1][0] - s * mat[1][2];
+        temp[1][2] = s * mat[1][0] + c * mat[1][2];
+
+        temp[2][0] = c * mat[2][0] - s * mat[2][2];
+        temp[2][2] = s * mat[2][0] + c * mat[2][2];
+
+        temp[3][0] = c * mat[3][0] - s * mat[3][2];
+        temp[3][2] = s * mat[3][0] + c * mat[3][2];
+
+        return temp;
+    }
+
+    template<typename T>
+    matrix<4, 4, T> rotationZ(const matrix<4, 4, T> &mat, T angle) {
+        const T c = std::cos(angle);
+        const T s = std::sin(angle);
+
+        matrix<4, 4, T> temp = mat;
+
+        temp[0][0] = c * mat[0][0] + s * mat[0][1];
+        temp[0][1] = -s * mat[0][0] + c * mat[0][1];
+
+        temp[1][0] = c * mat[1][0] + s * mat[1][1];
+        temp[1][1] = -s * mat[1][0] + c * mat[1][1];
+
+        temp[2][0] = c * mat[2][0] + s * mat[2][1];
+        temp[2][1] = -s * mat[2][0] + c * mat[2][1];
+
+        temp[3][0] = c * mat[3][0] + s * mat[3][1];
+        temp[3][1] = -s * mat[3][0] + c * mat[3][1];
+
+        return temp;
+    }
+
+    template<typename T>
+    matrix<4, 4, T> rotation(const matrix<4, 4, T> &mat, const vector<3, T> &angles) {
+        const T cX = std::cos(angles.x);
+        const T cY = std::cos(angles.y);
+        const T cZ = std::cos(angles.z);
+        const T sX = std::sin(angles.x);
+        const T sY = std::sin(angles.y);
+        const T sZ = std::sin(angles.z);
+
+        matrix<4, 4, T> temp = mat;
+
+        temp[0][0] = cY * cZ * mat[0][0] + (sX * sY * cZ - cX * sZ) * mat[0][1] + (cX * sY * cZ + sX * sZ) * mat[0][2];
+        temp[0][1] = cY * sZ * mat[0][0] + (sX * sY * sZ + cX * cZ) * mat[0][1] + (cX * sY * sZ - sX * cZ) * mat[0][2];
+        temp[0][2] = -sY * mat[0][0] + sX * cY * mat[0][1] + cX * cY * mat[0][2];
+
+        temp[1][0] = cY * cZ * mat[1][0] + (sX * sY * cZ - cX * sZ) * mat[1][1] + (cX * sY * cZ + sX * sZ) * mat[1][2];
+        temp[1][1] = cY * sZ * mat[1][0] + (sX * sY * sZ + cX * cZ) * mat[1][1] + (cX * sY * sZ - sX * cZ) * mat[1][2];
+        temp[1][2] = -sY * mat[1][0] + sX * cY * mat[1][1] + cX * cY * mat[1][2];
+
+        temp[2][0] = cY * cZ * mat[2][0] + (sX * sY * cZ - cX * sZ) * mat[2][1] + (cX * sY * cZ + sX * sZ) * mat[2][2];
+        temp[2][1] = cY * sZ * mat[2][0] + (sX * sY * sZ + cX * cZ) * mat[2][1] + (cX * sY * sZ - sX * cZ) * mat[2][2];
+        temp[2][2] = -sY * mat[2][0] + sX * cY * mat[2][1] + cX * cY * mat[2][2];
+
+        temp[3][0] = cY * cZ * mat[3][0] + (sX * sY * cZ - cX * sZ) * mat[3][1] + (cX * sY * cZ + sX * sZ) * mat[3][2];
+        temp[3][1] = cY * sZ * mat[3][0] + (sX * sY * sZ + cX * cZ) * mat[3][1] + (cX * sY * sZ - sX * cZ) * mat[3][2];
+        temp[3][2] = -sY * mat[3][0] + sX * cY * mat[3][1] + cX * cY * mat[3][2];
+
+        return temp;
+    }
+
+    template<typename T>
+    matrix<4, 4, T> scale(const matrix<4, 4, T> &mat, const vector<3, T> &factor) {
+        matrix<4, 4, T> temp = mat;
+
+        temp[0][0] = temp[0][0] * factor.x;
+        temp[1][0] = temp[1][0] * factor.x;
+        temp[2][0] = temp[2][0] * factor.x;
+        temp[3][0] = temp[3][0] * factor.x;
+
+        temp[0][1] = temp[0][1] * factor.y;
+        temp[1][1] = temp[1][1] * factor.y;
+        temp[2][1] = temp[2][1] * factor.y;
+        temp[3][1] = temp[3][1] * factor.y;
+
+        temp[0][2] = temp[0][2] * factor.z;
+        temp[1][2] = temp[1][2] * factor.z;
+        temp[2][2] = temp[2][2] * factor.z;
+        temp[3][2] = temp[3][2] * factor.z;
+
         return temp;
     }
 

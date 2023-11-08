@@ -1,7 +1,10 @@
 
 #pragma once
 
-#include <experimental/simd>
+#ifdef ZEPHYR_EXPERIMENTAL
+    #include <experimental/simd>
+#endif
+
 #include <type_traits>
 
 #include "math/vector.hpp"
@@ -41,8 +44,20 @@ namespace zephyr::math {
 
             constexpr vector() = default;
 
-            template<typename A>
-            constexpr vector(std::experimental::simd<T, A> value) : x(value[0]), y(value[1]) {}
+            #ifdef ZEPHYR_EXPERIMENTAL
+                template<typename A>
+                constexpr vector(std::experimental::simd<T, A> value) : x(value[0]), y(value[1]) {}
+            #endif
+
+            #ifdef ZEPHYR_EXPERIMENTAL
+                template<typename U>
+                constexpr void _set(const std::experimental::fixed_size_simd<U, 4> &simd) {
+                    this->_data[0] = static_cast<T>(simd[0]);
+                    this->_data[1] = static_cast<T>(simd[1]);
+                    this->_data[2] = static_cast<T>(simd[2]);
+                    this->_data[3] = static_cast<T>(simd[3]);
+                }
+            #endif
 
             // Copy&move constructors
 
@@ -217,104 +232,174 @@ namespace zephyr::math {
             // Unary Scalar Arithmetic operators
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
+            requires std::is_integral_v<U>
             constexpr vector<4, T> &operator+=(U scalar) {
-                std::experimental::fixed_size_simd<T, 4> a(this->data(), std::experimental::vector_aligned);
-                const std::experimental::fixed_size_simd<T, 4> b(static_cast<T>(scalar));
-                a += b;
-                a.copy_to(this->data(), std::experimental::vector_aligned);
+                #ifdef ZEPHYR_EXPERIMENTAL
+                    std::experimental::fixed_size_simd<U, 4> a([this](int i){ return static_cast<U>(this->data()[i]); });
+                    const std::experimental::fixed_size_simd<U, 4> b(scalar);
+                    a += b;
+                    _set(a);
+                #else
+                    this->x += scalar;
+                    this->y += scalar;
+                    this->z += scalar;
+                    this->w += scalar;
+                #endif
                 return *this;
             }
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
+            requires std::is_integral_v<U>
             constexpr vector<4, T> &operator-=(U scalar) {
-                std::experimental::fixed_size_simd<T, 4> a(this->data(), std::experimental::vector_aligned);
-                const std::experimental::fixed_size_simd<T, 4> b(static_cast<T>(scalar));
-                a -= b;
-                a.copy_to(this->data(), std::experimental::vector_aligned);
+                #ifdef ZEPHYR_EXPERIMENTAL
+                    std::experimental::fixed_size_simd<U, 4> a([this](int i){ return static_cast<U>(this->data()[i]); });
+                    const std::experimental::fixed_size_simd<U, 4> b(scalar);
+                    a -= b;
+                    _set(a);
+                #else
+                    this->x -= scalar;
+                    this->y -= scalar;
+                    this->z -= scalar;
+                    this->w -= scalar;
+                #endif
                 return *this;
             }
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
+            requires std::is_integral_v<U>
             constexpr vector<4, T> &operator*=(U scalar) {
-                std::experimental::fixed_size_simd<T, 4> a(this->data(), std::experimental::vector_aligned);
-                const std::experimental::fixed_size_simd<T, 4> b(static_cast<T>(scalar));
-                a *= b;
-                a.copy_to(this->data(), std::experimental::vector_aligned);
+                #ifdef ZEPHYR_EXPERIMENTAL
+                    std::experimental::fixed_size_simd<U, 4> a([this](int i){ return static_cast<U>(this->data()[i]); });
+                    const std::experimental::fixed_size_simd<U, 4> b(scalar);
+                    a *= b;
+                    _set(a);
+                #else
+                    this->x *= scalar;
+                    this->y *= scalar;
+                    this->z *= scalar;
+                    this->w *= scalar;
+                #endif
                 return *this;
             }
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
+            requires std::is_integral_v<U>
             constexpr vector<4, T> &operator/=(U scalar) {
-                std::experimental::fixed_size_simd<T, 4> a(this->data(), std::experimental::vector_aligned);
-                const std::experimental::fixed_size_simd<T, 4> b(static_cast<T>(scalar));
-                a /= b;
-                a.copy_to(this->data(), std::experimental::vector_aligned);
+                #ifdef ZEPHYR_EXPERIMENTAL
+                    std::experimental::fixed_size_simd<U, 4> a([this](int i){ return static_cast<U>(this->data()[i]); });
+                    const std::experimental::fixed_size_simd<U, 4> b(scalar);
+                    a /= b;
+                    _set(a);
+                #else
+                    this->x /= scalar;
+                    this->y /= scalar;
+                    this->z /= scalar;
+                    this->w /= scalar;
+                #endif
                 return *this;
             }
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
+            requires std::is_integral_v<T> && std::is_integral_v<U>
             constexpr vector<4, T> &operator%=(U scalar) {
-                std::experimental::fixed_size_simd<T, 4> a(this->data(), std::experimental::vector_aligned);
-                const std::experimental::fixed_size_simd<T, 4> b(static_cast<T>(scalar));
-                a %= b;
-                a.copy_to(this->data(), std::experimental::vector_aligned);
+                #ifdef ZEPHYR_EXPERIMENTAL
+                    std::experimental::fixed_size_simd<U, 4> a([this](int i){ return static_cast<U>(this->data()[i]); });
+                    const std::experimental::fixed_size_simd<U, 4> b(scalar);
+                    a %= b;
+                    _set(a);
+                #else
+                    this->x %= scalar;
+                    this->y %= scalar;
+                    this->z %= scalar;
+                    this->w %= scalar;
+                #endif
                 return *this;
             }
 
             // Bitwise operators
 
             template<typename U>
-            requires std::is_integral_v<U>
+            requires std::is_integral_v<T> && std::is_integral_v<U>
             constexpr vector<4, T> &operator&=(U scalar) {
-                std::experimental::fixed_size_simd<T, 4> a(this->data(), std::experimental::vector_aligned);
-                const std::experimental::fixed_size_simd<U, 4> b(scalar);
-                a &= b;
-                a.copy_to(this->data(), std::experimental::vector_aligned);
+                #ifdef ZEPHYR_EXPERIMENTAL
+                    std::experimental::fixed_size_simd<U, 4> a([this](int i){ return static_cast<U>(this->data()[i]); });
+                    const std::experimental::fixed_size_simd<U, 4> b(scalar);
+                    a &= b;
+                    _set(a);
+                #else
+                    this->x &= scalar;
+                    this->y &= scalar;
+                    this->z &= scalar;
+                    this->w &= scalar;
+                #endif
                 return *this;
             }
 
             template<typename U>
-            requires std::is_integral_v<U>
+            requires std::is_integral_v<T> && std::is_integral_v<U>
             constexpr vector<4, T> &operator|=(U scalar) {
-                std::experimental::fixed_size_simd<T, 4> a(this->data(), std::experimental::vector_aligned);
-                const std::experimental::fixed_size_simd<U, 4> b(scalar);
-                a |= b;
-                a.copy_to(this->data(), std::experimental::vector_aligned);
+                #ifdef ZEPHYR_EXPERIMENTAL
+                    std::experimental::fixed_size_simd<U, 4> a([this](int i){ return static_cast<U>(this->data()[i]); });
+                    const std::experimental::fixed_size_simd<U, 4> b(scalar);
+                    a |= b;
+                    _set(a);
+                #else
+                    this->x |= scalar;
+                    this->y |= scalar;
+                    this->z |= scalar;
+                    this->w |= scalar;
+                #endif
                 return *this;
             }
 
             template<typename U>
-            requires std::is_integral_v<U>
+            requires std::is_integral_v<T> && std::is_integral_v<U>
             constexpr vector<4, T> &operator^=(U scalar) {
-                std::experimental::fixed_size_simd<T, 4> a(this->data(), std::experimental::vector_aligned);
-                const std::experimental::fixed_size_simd<U, 4> b(scalar);
-                a ^= b;
-                a.copy_to(this->data(), std::experimental::vector_aligned);
+                #ifdef ZEPHYR_EXPERIMENTAL
+                    std::experimental::fixed_size_simd<U, 4> a([this](int i){ return static_cast<U>(this->data()[i]); });
+                    const std::experimental::fixed_size_simd<U, 4> b(scalar);
+                    a ^= b;
+                    _set(a);
+                #else
+                    this->x ^= scalar;
+                    this->y ^= scalar;
+                    this->z ^= scalar;
+                    this->w ^= scalar;
+                #endif
                 return *this;
             }
 
             template<typename U>
-            requires std::is_integral_v<U>
+            requires std::is_integral_v<T> && std::is_integral_v<U>
             constexpr vector<4, T> &operator<<=(U scalar) {
-                std::experimental::fixed_size_simd<T, 4> a(this->data(), std::experimental::vector_aligned);
-                const std::experimental::fixed_size_simd<U, 4> b(scalar);
-                a <<= b;
-                a.copy_to(this->data(), std::experimental::vector_aligned);
+                #ifdef ZEPHYR_EXPERIMENTAL
+                    std::experimental::fixed_size_simd<U, 4> a([this](int i){ return static_cast<U>(this->data()[i]); });
+                    const std::experimental::fixed_size_simd<U, 4> b(scalar);
+                    a <<= b;
+                    _set(a);
+                #else
+                    this->x <<= scalar;
+                    this->y <<= scalar;
+                    this->z <<= scalar;
+                    this->w <<= scalar;
+                #endif
                 return *this;
             }
 
             template<typename U>
-            requires std::is_integral_v<U>
+            requires std::is_integral_v<T> && std::is_integral_v<U>
             constexpr vector<4, T> &operator>>=(U scalar) {
-                std::experimental::fixed_size_simd<T, 4> a(this->data(), std::experimental::vector_aligned);
-                const std::experimental::fixed_size_simd<U, 4> b(scalar);
-                a >>= b;
-                a.copy_to(this->data(), std::experimental::vector_aligned);
+                #ifdef ZEPHYR_EXPERIMENTAL
+                    std::experimental::fixed_size_simd<U, 4> a([this](int i){ return static_cast<U>(this->data()[i]); });
+                    const std::experimental::fixed_size_simd<U, 4> b(scalar);
+                    a >>= b;
+                    _set(a);
+                #else
+                    this->x >>= scalar;
+                    this->y >>= scalar;
+                    this->z >>= scalar;
+                    this->w >>= scalar;
+                #endif
                 return *this;
             }
 
@@ -342,6 +427,18 @@ namespace zephyr::math {
 
             constexpr const T *data() const {
                 return &this->x;
+            }
+
+            T &operator[](size_t i) {
+                if (i >= this->size())
+                    throw std::out_of_range("Index out of range");
+                return this->data()[i];
+            }
+
+            const T &operator[](size_t i) const {
+                if (i >= this->size())
+                    throw std::out_of_range("Index out of range");
+                return this->data()[i];
             }
     };
 

@@ -61,14 +61,12 @@ namespace zephyr::math {
             // Assignments
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
             constexpr vector<1, T> &operator=(const vector<1, U> &other) {
                 this->x = static_cast<T>(other.x);
                 return *this;
             }
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
             constexpr vector<1, T> &operator=(vector<1, U> &&other) {
                 this->x = static_cast<T>(other.x);
                 return *this;
@@ -77,35 +75,35 @@ namespace zephyr::math {
             // Unary Scalar Arithmetic operators
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
+            requires std::is_arithmetic_v<U>
             constexpr vector<1, T> &operator+=(U scalar) {
                 this->x += static_cast<T>(scalar);
                 return *this;
             }
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
+            requires std::is_arithmetic_v<U>
             constexpr vector<1, T> &operator-=(U scalar) {
                 this->x -= static_cast<T>(scalar);
                 return *this;
             }
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
+            requires std::is_arithmetic_v<U>
             constexpr vector<1, T> &operator*=(U scalar) {
                 this->x *= static_cast<T>(scalar);
                 return *this;
             }
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
+            requires std::is_arithmetic_v<U>
             constexpr vector<1, T> &operator/=(U scalar) {
                 this->x /= static_cast<T>(scalar);
                 return *this;
             }
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
+            requires std::is_integral_v<T> && std::is_integral_v<U>
             constexpr vector<1, T> &operator%=(U scalar) {
                 this->x %= static_cast<T>(scalar);
                 return *this;
@@ -151,11 +149,11 @@ namespace zephyr::math {
             constexpr T dot(const vector<1, T> &other) const;
 
             double length() const {
-                return std::sqrt(this->dot(*this));
+                return this->x;
             }
 
             vector<1, T> unit() const {
-                return *this / this->length();
+                return vector<1, T>(static_cast<T>(1));
             }
 
             constexpr T *data() {
@@ -164,6 +162,18 @@ namespace zephyr::math {
 
             constexpr const T *data() const {
                 return &this->x;
+            }
+
+            T &operator[](size_t i) {
+                if (i >= this->size())
+                    throw std::out_of_range("Index out of range");
+                return this->data()[i];
+            }
+
+            const T &operator[](size_t i) const {
+                if (i >= this->size())
+                    throw std::out_of_range("Index out of range");
+                return this->data()[i];
             }
     };
 
@@ -182,65 +192,125 @@ namespace zephyr::math {
     // Binary arithmetic operators
 
     template<typename T, typename U>
-    requires std::is_convertible_v<U, T>
+    requires std::is_arithmetic_v<U>
     constexpr vector<1, T> operator+(const vector<1, T> &vec, U scalar) {
-        return vector<1, T>(vec.x + static_cast<T>(scalar));
+        return vector<1, T>(vec.x + scalar);
     }
 
     template<typename T, typename U>
-    requires std::is_convertible_v<U, T>
+    requires std::is_arithmetic_v<U>
+    constexpr vector<1, T> operator+(U scalar, const vector<1, T> &vec) {
+        return vector<1, T>(vec.x + scalar);
+    }
+
+    template<typename T, typename U>
+    requires std::is_arithmetic_v<U>
     constexpr vector<1, T> operator-(const vector<1, T> &vec, U scalar) {
-        return vector<1, T>(vec.x - static_cast<T>(scalar));
+        return vector<1, T>(vec.x - scalar);
     }
 
     template<typename T, typename U>
-    requires std::is_convertible_v<U, T>
+    requires std::is_arithmetic_v<U>
+    constexpr vector<1, T> operator-(U scalar, const vector<1, T> &vec) {
+        return vector<1, T>(scalar - vec.x);
+    }
+
+    template<typename T, typename U>
+    requires std::is_arithmetic_v<U>
     constexpr vector<1, T> operator*(const vector<1, T> &vec, U scalar) {
-        return vector<1, T>(vec.x * static_cast<T>(scalar));
+        return vector<1, T>(vec.x * scalar);
     }
 
     template<typename T, typename U>
-    requires std::is_convertible_v<U, T>
+    requires std::is_arithmetic_v<U>
+    constexpr vector<1, T> operator*(U scalar, const vector<1, T> &vec) {
+        return vector<1, T>(vec.x * scalar);
+    }
+
+    template<typename T, typename U>
+    requires std::is_arithmetic_v<U>
     constexpr vector<1, T> operator/(const vector<1, T> &vec, U scalar) {
-        return vector<1, T>(vec.x / static_cast<T>(scalar));
+        return vector<1, T>(vec.x / scalar);
     }
 
     template<typename T, typename U>
-    requires std::is_convertible_v<U, T>
+    requires std::is_arithmetic_v<U>
+    constexpr vector<1, T> operator/(U scalar, const vector<1, T> &vec) {
+        return vector<1, T>(scalar / vec.x);
+    }
+
+    template<typename T, typename U>
+    requires std::is_integral_v<T> && std::is_integral_v<U>
     constexpr vector<1, T> operator%(const vector<1, T> &vec, U scalar) {
-        return vector<1, T>(vec.x % static_cast<T>(scalar));
+        return vector<1, T>(vec.x % scalar);
+    }
+
+    template<typename T, typename U>
+    requires std::is_integral_v<T> && std::is_integral_v<U>
+    constexpr vector<1, T> operator%(U scalar, const vector<1, T> &vec) {
+        return vector<1, T>(scalar % vec.x);
     }
 
     // Bitwise operators
 
     template<typename T, typename U>
-    requires std::is_integral_v<U>
+    requires std::is_integral_v<T> && std::is_integral_v<U>
     constexpr vector<1, T> operator&(const vector<1, T> &vec, U scalar) {
         return vector<1, T>(vec.x & scalar);
     }
 
     template<typename T, typename U>
-    requires std::is_integral_v<U>
+    requires std::is_integral_v<T> && std::is_integral_v<U>
+    constexpr vector<1, T> operator&(U scalar, const vector<1, T> &vec) {
+        return vector<1, T>(scalar & vec.x);
+    }
+
+    template<typename T, typename U>
+    requires std::is_integral_v<T> && std::is_integral_v<U>
     constexpr vector<1, T> operator|(const vector<1, T> &vec, U scalar) {
         return vector<1, T>(vec.x | scalar);
     }
 
     template<typename T, typename U>
-    requires std::is_integral_v<U>
+    requires std::is_integral_v<T> && std::is_integral_v<U>
+    constexpr vector<1, T> operator|(U scalar, const vector<1, T> &vec) {
+        return vector<1, T>(scalar | vec.x);
+    }
+
+    template<typename T, typename U>
+    requires std::is_integral_v<T> && std::is_integral_v<U>
     constexpr vector<1, T> operator^(const vector<1, T> &vec, U scalar) {
         return vector<1, T>(vec.x ^ scalar);
     }
 
     template<typename T, typename U>
-    requires std::is_integral_v<U>
+    requires std::is_integral_v<T> && std::is_integral_v<U>
+    constexpr vector<1, T> operator^(U scalar, const vector<1, T> &vec) {
+        return vector<1, T>(scalar ^vec.x);
+    }
+
+    template<typename T, typename U>
+    requires std::is_integral_v<T> && std::is_integral_v<U>
     constexpr vector<1, T> operator<<(const vector<1, T> &vec, U scalar) {
         return vector<1, T>(vec.x << scalar);
     }
 
     template<typename T, typename U>
-    requires std::is_integral_v<U>
+    requires std::is_integral_v<T> && std::is_integral_v<U>
+    constexpr vector<1, T> operator<<(U scalar, const vector<1, T> &vec) {
+        return vector<1, T>(scalar << vec.x);
+    }
+
+    template<typename T, typename U>
+    requires std::is_integral_v<T> && std::is_integral_v<U>
     constexpr vector<1, T> operator>>(const vector<1, T> &vec, U scalar) {
         return vector<1, T>(vec.x >> scalar);
+    }
+
+    template<typename T, typename U>
+    requires std::is_integral_v<T> && std::is_integral_v<U>
+    constexpr vector<1, T> operator>>(U scalar, const vector<1, T> &vec) {
+        return vector<1, T>(scalar >> vec.x);
     }
 
     template<typename T>
@@ -251,15 +321,13 @@ namespace zephyr::math {
 
     // Equality operators
 
-    template<typename T>
-    requires std::equality_comparable<T>
-    constexpr bool operator==(const vector<1, T> &lhs, const vector<1, T> &rhs) {
+    template<typename T, typename U>
+    constexpr bool operator==(const vector<1, T> &lhs, const vector<1, U> &rhs) {
         return lhs.x == rhs.x;
     }
 
-    template<typename T>
-    requires std::equality_comparable<T>
-    constexpr bool operator!=(const vector<1, T> &lhs, const vector<1, T> &rhs) {
+    template<typename T, typename U>
+    constexpr bool operator!=(const vector<1, T> &lhs, const vector<1, U> &rhs) {
         return lhs.x != rhs.x;
     }
 

@@ -21,19 +21,11 @@
 #include <experimental/simd>
 
 int main(void) {
-
-    zephyr::math::matrix<2, 3, float> a(
-        1, 2, 3,
-        4, 5, 6
-    );
-
-    zephyr::math::matrix<2, 3, float> b(
-        1, 2, 3,
-        4, 5, 6
-    );
-
-    a += b;
-    std::cout << a << std::endl;
+    // zephyr::math::vector<5, int> a(1, 2, 3, 4, 5);
+    // zephyr::math::vector<5, float> b(1, 2, 3, 4, 5);
+    // std::experimental::fixed_size_simd<float, 5> c(1.5);
+    // std::experimental::fixed_size_simd<int, 5> d(1);
+    // c += d;
 
     // zephyr::glfw::Window window(800, 600, "WindowTest");
 
