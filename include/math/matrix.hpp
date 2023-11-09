@@ -25,6 +25,7 @@ namespace zephyr::math {
                 return N;
             }
 
+            // Unit matrix constructor
             constexpr matrix() {
                 constexpr size_t min = M < N ? M : N;
                 for (size_t i = 0; i < min; ++i) {
@@ -135,7 +136,7 @@ namespace zephyr::math {
             // Unary Scalar Arithmetic operators
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
+            requires std::is_arithmetic_v<U>
             constexpr matrix<M, N, T> &operator+=(U x) {
                 for (size_t i = 0; i < M; ++i) {
                     for (size_t j = 0; j < N; ++j) {
@@ -146,7 +147,6 @@ namespace zephyr::math {
             }
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
             constexpr matrix<M, N, T> &operator+=(const matrix<M, N, U> &other) {
                 for (size_t i = 0; i < M; ++i) {
                     for (size_t j = 0; j < N; ++j) {
@@ -157,7 +157,7 @@ namespace zephyr::math {
             }
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
+            requires std::is_arithmetic_v<U>
             constexpr matrix<M, N, T> &operator-=(U x) {
                 for (size_t i = 0; i < M; ++i) {
                     for (size_t j = 0; j < N; ++j) {
@@ -168,7 +168,6 @@ namespace zephyr::math {
             }
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
             constexpr matrix<M, N, T> &operator-=(const matrix<M, N, U> &other) {
                 for (size_t i = 0; i < M; ++i) {
                     for (size_t j = 0; j < N; ++j) {
@@ -179,7 +178,7 @@ namespace zephyr::math {
             }
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
+            requires std::is_arithmetic_v<U>
             constexpr matrix<M, N, T> &operator*=(U x) {
                 for (size_t i = 0; i < M; ++i) {
                     for (size_t j = 0; j < N; ++j) {
@@ -190,7 +189,7 @@ namespace zephyr::math {
             }
 
             template<typename U>
-            requires std::is_convertible_v<U, T> && (M == N)
+            requires (M == N)
             constexpr matrix<M, N, T> &operator*=(const matrix<M, N, U> &other) {
                 matrix<M, N, T> temp = *this;
                 for (size_t i = 0; i < M; ++i) {
@@ -205,7 +204,7 @@ namespace zephyr::math {
             }
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
+            requires std::is_arithmetic_v<U>
             constexpr matrix<M, N, T> &operator/=(U x) {
                 for (size_t i = 0; i < M; ++i) {
                     for (size_t j = 0; j < N; ++j) {
@@ -235,15 +234,13 @@ namespace zephyr::math {
 
     template<size_t M, size_t N, typename T>
     constexpr matrix<M, N, T> operator-(const matrix<M, N, T> &mat) {
-        matrix<M, N, T> temp = mat;
-        temp *= -1;
-        return temp;
+        return mat * -1;
     }
 
     // Binary Scalar Arithmetic operators
 
     template<size_t M, size_t N, typename T, typename U>
-    requires std::is_convertible_v<U, T>
+    requires std::is_arithmetic_v<U>
     constexpr matrix<M, N, T> operator+(const matrix<M, N, T> &mat, U x) {
         matrix<M, N, T> temp = mat;
         temp += x;
@@ -251,7 +248,7 @@ namespace zephyr::math {
     }
 
     template<size_t M, size_t N, typename T, typename U>
-    requires std::is_convertible_v<U, T>
+    requires std::is_arithmetic_v<U>
     constexpr matrix<M, N, T> operator+(U x, const matrix<M, N, T> &mat) {
         matrix<M, N, T> temp = mat;
         temp += x;
@@ -259,7 +256,7 @@ namespace zephyr::math {
     }
 
     template<size_t M, size_t N, typename T, typename U>
-    requires std::is_convertible_v<U, T>
+    requires std::is_arithmetic_v<U>
     constexpr matrix<M, N, T> operator-(const matrix<M, N, T> &mat, U x) {
         matrix<M, N, T> temp = mat;
         temp -= x;
@@ -267,7 +264,7 @@ namespace zephyr::math {
     }
 
     template<size_t M, size_t N, typename T, typename U>
-    requires std::is_convertible_v<U, T>
+    requires std::is_arithmetic_v<U>
     constexpr matrix<M, N, T> operator-(U x, const matrix<M, N, T> &mat) {
         matrix<M, N, T> temp = -mat;
         temp += x;
@@ -275,7 +272,7 @@ namespace zephyr::math {
     }
 
     template<size_t M, size_t N, typename T, typename U>
-    requires std::is_convertible_v<U, T>
+    requires std::is_arithmetic_v<U>
     constexpr matrix<M, N, T> operator*(const matrix<M, N, T> &mat, U x) {
         matrix<M, N, T> temp = mat;
         temp *= x;
@@ -283,7 +280,7 @@ namespace zephyr::math {
     }
 
     template<size_t M, size_t N, typename T, typename U>
-    requires std::is_convertible_v<U, T>
+    requires std::is_arithmetic_v<U>
     constexpr matrix<M, N, T> operator*(U x, const matrix<M, N, T> &mat) {
         matrix<M, N, T> temp = mat;
         temp *= x;
@@ -291,7 +288,7 @@ namespace zephyr::math {
     }
 
     template<size_t M, size_t N, typename T, typename U>
-    requires std::is_convertible_v<U, T>
+    requires std::is_arithmetic_v<U>
     constexpr matrix<M, N, T> operator/(const matrix<M, N, T> &mat, U x) {
         matrix<M, N, T> temp = mat;
         temp /= x;
@@ -317,7 +314,6 @@ namespace zephyr::math {
     }
 
     template<size_t M, size_t N, size_t P, typename T, typename U>
-    requires std::is_convertible_v<U, T>
     constexpr matrix<M, P, T> operator*(const matrix<M, N, T> &lhs, const matrix<N, P, U> &rhs) {
         matrix<M, P, T> temp;
         for (size_t i = 0; i < M; ++i) {
@@ -334,7 +330,6 @@ namespace zephyr::math {
     // Binary Vector Arithmetic operators
 
     template<size_t M, size_t N, typename T, typename U>
-    requires std::is_convertible_v<U, T>
     constexpr vector<M, T> operator*(const matrix<M, N, T> &mat, const vector<N, U> &vec) {
         vector<M, T> temp;
         for (size_t i = 0; i < M; ++i) {
@@ -347,7 +342,6 @@ namespace zephyr::math {
     }
 
     template<size_t M, size_t N, typename T, typename U>
-    requires std::is_convertible_v<U, T>
     constexpr vector<N, T> operator*(const vector<M, U> &vec, const matrix<M, N, T> &mat) {
         vector<N, T> temp;
         for (size_t i = 0; i < N; ++i) {
@@ -375,7 +369,7 @@ namespace zephyr::math {
     }
 
     template<size_t M, size_t N, size_t O, typename T, typename U>
-    requires std::is_convertible_v<U, T> && (M > O)
+    requires (M > O)
     constexpr vector<O, T> operator*(const vector<O, U> &vec, const matrix<M, N, T> &mat) {
         vector<O, T> temp;
         for (size_t i = 0; i < O; ++i) {

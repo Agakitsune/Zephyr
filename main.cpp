@@ -21,11 +21,12 @@
 #include <experimental/simd>
 
 int main(void) {
-    // zephyr::math::vector<5, int> a(1, 2, 3, 4, 5);
-    // zephyr::math::vector<5, float> b(1, 2, 3, 4, 5);
-    // std::experimental::fixed_size_simd<float, 5> c(1.5);
-    // std::experimental::fixed_size_simd<int, 5> d(1);
-    // c += d;
+    zephyr::math::matrix<4, 4, float> rot = zephyr::math::rotation(zephyr::math::matrix<4, 4, float>(), zephyr::math::vec3f(0, 0, M_PI / 2));
+    zephyr::math::vec3f v(1, 0, 0);
+
+    zephyr::math::vec3f r = rot * v;
+
+    std::cout << r << std::endl;
 
     // zephyr::glfw::Window window(800, 600, "WindowTest");
 

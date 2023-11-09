@@ -1,3 +1,11 @@
+# Zephyr 0.5.2 - 09/11/2023
+
+### Changed `zephyr::math::matrix`
+
+* `zephyr::math`
+    
+    * `matrix` - remove some templates constraints
+
 # Zephyr 0.5.1 - 08/11/2023
 
 ### Added define `ZEPHYR_USE_ANONYMOUS`
