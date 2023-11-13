@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <iostream>
+
 #include "gl/Utils.hpp"
 
 namespace zephyr::gl {
@@ -48,6 +50,8 @@ namespace zephyr::gl {
         TessControl = GL_TESS_CONTROL_SHADER,
         TessEvaluation = GL_TESS_EVALUATION_SHADER
     };
+
+    std::ostream &operator<<(std::ostream &stream, const ShaderType type);
 
     enum class FramebufferAttach : GLenum {
         Color = GL_COLOR_ATTACHMENT0,

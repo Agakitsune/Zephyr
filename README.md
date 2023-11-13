@@ -1,4 +1,18 @@
-# Zephyr 0.5.2 - 09/11/2023
+# Zephyr 0.5.0 - 13/11/2023
+
+### Added define `ZEPHYR_DEBUG`
+
+* New define `ZEPHYR_DEBUG` - enables debug messages
+
+* `zephyr::utils`
+
+    :green_circle: New function `loadProgram()` - load multiple shader to make a Program
+
+    * `loadShader()` - added Debug message
+
+    * `loadTexture()` - added Debug message
+
+# Zephyr 0.4.3 - 09/11/2023
 
 ### Changed `zephyr::math::matrix`
 
@@ -6,13 +20,13 @@
     
     * `matrix` - remove some templates constraints
 
-# Zephyr 0.5.1 - 08/11/2023
+# Zephyr 0.4.2 - 08/11/2023
 
 ### Added define `ZEPHYR_USE_ANONYMOUS`
 
 * New define `ZEPHYR_USE_ANONYMOUS` - enables anonymous structs and unions
 
-# Zephyr 0.5.0 - 08/11/2023
+# Zephyr 0.4.1 - 08/11/2023
 
 ### Added define `ZEPHYR_EXPERIMENTAL`
 

@@ -4,7 +4,9 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-#include <iostream>
+#ifdef ZEPHYR_DEBUG
+    #include "utils/Debug.hpp"
+#endif
 
 namespace zephyr::utils {
 
@@ -14,10 +16,14 @@ namespace zephyr::utils {
         if (data == nullptr) {
             throw std::runtime_error("Failed to load texture: " + path);
         }
-        std::cout << "Loaded texture: " << path << std::endl;
-        std::cout << "Width: " << width << std::endl;
-        std::cout << "Height: " << height << std::endl;
-        std::cout << "Channels: " << channels << std::endl;
+
+        #ifdef ZEPHYR_DEBUG
+            zephyr::debug("Texture") << "Loading: " << path << std::endl;
+            zephyr::debug("Texture") << "Width: " << width << std::endl;
+            zephyr::debug("Texture") << "Height: " << height << std::endl;
+            zephyr::debug("Texture") << "Channels: " << channels << std::endl;
+        #endif
+
         gl::Texture texture;
         texture.bind(gl::TextureTarget::Texture2D);
         texture.setTextureParameter(gl::TextureParameterName::WrapS, gl::TextureWrap::Repeat);

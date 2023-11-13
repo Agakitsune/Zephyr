@@ -8,9 +8,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(USE_EXPERIMENTAL OFF CACHE BOOL "Usage of experimental C++ features (std::experimental) in Zephyr")
 set(USE_ANONYMOUS OFF CACHE BOOL "Usage of anonymous structs in Zephyr")
+set(USE_DEBUG ON CACHE BOOL "Debug messages in Zephyr")
 
 message("-- Zephyr experimental features: ${USE_EXPERIMENTAL}")
 message("-- Zephyr anonymous structs: ${USE_ANONYMOUS}")
+message("-- Zephyr debug messages: ${USE_DEBUG}")
 
 if (USE_EXPERIMENTAL)
     message(WARNING "Enabling Zephyr experimental features
@@ -83,22 +85,29 @@ target_link_libraries(${PROJECT_NAME}
         ${GLFW_LIBRARIES}
 )
 
-if (LINUX AND NOT APPLE AND ${USE_EXPERIMENTAL})
+if (LINUX AND NOT APPLE AND USE_EXPERIMENTAL)
     target_compile_options(${PROJECT_NAME}
         PUBLIC
             -DZEPHYR_EXPERIMENTAL
     )
 endif()
 
-if (LINUX AND NOT APPLE AND ${USE_ANONYMOUS})
+if (LINUX AND NOT APPLE AND USE_ANONYMOUS)
     target_compile_options(${PROJECT_NAME}
         PUBLIC
             -DZEPHYR_USE_ANONYMOUS
     )
 endif()
 
-if (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+if (NOT ${CMAKE_BUILD_TYPE} OR ${CMAKE_BUILD_TYPE} STREQUAL "Debug")
     if (LINUX AND NOT APPLE)
+        if (USE_DEBUG)
+            target_compile_options(${PROJECT_NAME}
+                PUBLIC
+                    -DZEPHYR_DEBUG
+            )
+        endif()
+
         target_compile_options(${PROJECT_NAME}
             PUBLIC
                 -ggdb

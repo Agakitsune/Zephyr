@@ -3,10 +3,19 @@
 
 #include <fstream>
 
+#ifdef ZEPHYR_DEBUG
+    #include "utils/Debug.hpp"
+#endif
+
 namespace zephyr::utils {
     
     gl::Shader loadShader(const std::string &path, gl::ShaderType type) {
         std::ifstream file(path);
+
+        #ifdef ZEPHYR_DEBUG
+            debug("Shader") << "Loading " << type << " shader: " << path << std::endl;
+        #endif
+
         if (!file.is_open()) {
             throw std::runtime_error("Could not open file: " + path);
         }
