@@ -1,3 +1,19 @@
+# Zephyr 0.5.2 - 16/11/2023
+
+### Added Viewport automatic resizing
+
+* `zephyr::glfw`
+
+    * `Window` - Automaticaly resizes viewport when window is resized
+
+* `zephyr::math`
+
+    * `vector`
+        
+        - Copy & Move Assignment didn't compile, added default implementation
+
+        - Added constructor `vector(const vector<T, N>&)` on `vector1`, `vector2`, `vector3` and `vector4` to allow construction from greater vectors
+
 # Zephyr 0.5.1 - 16/11/2023
 
 ### Changed Window Implementation

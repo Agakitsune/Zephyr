@@ -76,11 +76,9 @@ namespace zephyr::math {
             // Conversion copy&move constructors
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
             constexpr vector(const vector<2, U> &other) : x(static_cast<T>(other.x)), y(static_cast<T>(other.y)) {}
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
             constexpr vector(vector<2, U> &&other) : x(static_cast<T>(other.x)), y(static_cast<T>(other.y)) {}
 
             // Scalar constructor
@@ -89,31 +87,32 @@ namespace zephyr::math {
             explicit constexpr vector(T x, T y) : x(x), y(y) {}
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
             explicit constexpr vector(const vector<1, U> &x, T y) : x(static_cast<T>(x.x)), y(y) {}
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
             explicit constexpr vector(T x, const vector<1, U> &y) : x(x), y(static_cast<T>(y.x)) {}
 
             template<typename U, typename V>
-            requires std::is_convertible_v<U, T> && std::is_convertible_v<V, T>
             explicit constexpr vector(const vector<1, U> &x, const vector<1, V> &y) : x(static_cast<T>(x.x)), y(static_cast<T>(y.x)) {}
 
             // Conversions from other vector types
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
             explicit constexpr vector(const vector<3, U> &other) : x(static_cast<T>(other.x)), y(static_cast<T>(other.y)) {}
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
             explicit constexpr vector(const vector<4, U> &other) : x(static_cast<T>(other.x)), y(static_cast<T>(other.y)) {}
+
+            template<size_t N, typename U>
+            requires (N > 4)
+            explicit constexpr vector(const vector<N, U> &other) : x(static_cast<T>(other[0])), y(static_cast<T>(other[1])) {}
 
             // Assignments
 
+            constexpr vector<2, T> &operator=(const vector<2, T> &other) = default;
+            constexpr vector<2, T> &operator=(vector<2, T> &&other) = default;
+
             template<typename U>
-            requires std::is_convertible_v<U, T>
             constexpr vector<2, T> &operator=(const vector<2, U> &other) {
                 this->x = static_cast<T>(other.x);
                 this->y = static_cast<T>(other.y);
@@ -121,7 +120,6 @@ namespace zephyr::math {
             }
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
             constexpr vector<2, T> &operator=(vector<2, U> &&other) {
                 this->x = static_cast<T>(other.x);
                 this->y = static_cast<T>(other.y);

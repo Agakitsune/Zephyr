@@ -33,11 +33,9 @@ namespace zephyr::math {
             // Conversion copy&move constructors
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
             constexpr vector(const vector<1, U> &other) : x(static_cast<T>(other.x)) {}
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
             constexpr vector(vector<1, U> &&other) : x(static_cast<T>(other.x)) {}
 
             // Scalar constructor
@@ -47,18 +45,22 @@ namespace zephyr::math {
             // Conversions from other vector types
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
             explicit constexpr vector(const vector<2, U> &other) : x(static_cast<T>(other.x)) {}
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
             explicit constexpr vector(const vector<3, U> &other) : x(static_cast<T>(other.x)) {}
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
             explicit constexpr vector(const vector<4, U> &other) : x(static_cast<T>(other.x)) {}
 
+            template<size_t N, typename U>
+            requires (N > 4)
+            explicit constexpr vector(const vector<N, U> &other) : x(static_cast<T>(other[0])) {}
+
             // Assignments
+
+            constexpr vector<1, T> &operator=(const vector<1, T> &other) = default;
+            constexpr vector<1, T> &operator=(vector<1, T> &&other) = default;
 
             template<typename U>
             constexpr vector<1, T> &operator=(const vector<1, U> &other) {

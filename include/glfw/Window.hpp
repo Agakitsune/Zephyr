@@ -68,6 +68,8 @@ namespace zephyr::glfw {
         static void init();
         static void glewInit();
 
+        static void resizeCallback(GLFWwindow *window, int width, int height);
+
         public:
             Window(int width, int height, const std::string &title);
             Window(int width, int height, std::string &&title);

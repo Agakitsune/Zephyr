@@ -110,6 +110,9 @@ namespace zephyr::math {
 
             // Assignments
 
+            constexpr vector<N, T> &operator=(const vector<N, T> &other) = default;
+            constexpr vector<N, T> &operator=(vector<N, T> &&other) = default;
+
             template<typename U>
             constexpr vector<N, T> &operator=(const vector<N, U> &other) {
                 for (size_t i = 0; i < N; ++i) {

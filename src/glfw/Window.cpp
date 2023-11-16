@@ -18,6 +18,34 @@ namespace zephyr::glfw {
         _glewInit = true;
     }
 
+    void Window::resizeCallback(GLFWwindow *window, int width, int height) {
+        (void)window;
+        GLint values[4];
+        glGetIntegerv(GL_VIEWPORT, values);
+        int x = values[0];
+        int y = values[1];
+
+        float ratio = (float)values[2] / (float)values[3];
+        float Rratio = (float)values[3] / (float)values[2];
+
+        zephyr::math::vec2i sizeW = zephyr::math::vec2f(width, width * Rratio);
+        zephyr::math::vec2i sizeH = zephyr::math::vec2f(height * ratio, height);
+        zephyr::math::vec2i size;
+
+        if ((sizeW.x <= width) && (sizeW.y <= height))
+            size = sizeW;
+        else
+            size = sizeH;
+
+        if (height == size.y) {
+            x = (width - size.x) >> 1;
+            glViewport(x, y, size.x, size.y);
+        } else {
+            y = (height - size.y) >> 1;
+            glViewport(x, y, size.x, size.y);
+        }
+    }
+
     Window::Window(int width, int height, const std::string &title) : Window(width, height, title.c_str()) {}
 
     Window::Window(int width, int height, std::string &&title) : Window(width, height, title) {}
@@ -33,6 +61,8 @@ namespace zephyr::glfw {
         defaultHints = true;
 
         glfwMakeContextCurrent(handle);
+
+        glfwSetFramebufferSizeCallback(handle, &resizeCallback);
 
         glewInit();
     }

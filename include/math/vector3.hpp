@@ -97,56 +97,51 @@ namespace zephyr::math {
             explicit constexpr vector(T x, T y, T z) : x(x), y(y), z(z) {}
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
             explicit constexpr vector(const vector<1, U> &x, T y, T z) : x(static_cast<T>(x.x)), y(y), z(z) {}
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
             explicit constexpr vector(T x, const vector<1, U> &y, T z) : x(x), y(static_cast<T>(y.x)), z(z) {}
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
             explicit constexpr vector(T x, T y, const vector<1, U> &z) : x(x), y(y), z(static_cast<T>(z.x)) {}
 
             template<typename U, typename V>
-            requires std::is_convertible_v<U, T> && std::is_convertible_v<V, T>
             explicit constexpr vector(const vector<1, U> &x, const vector<1, V> &y, T z) : x(static_cast<T>(x.x)), y(static_cast<T>(y.x)), z(z) {}
 
             template<typename U, typename V>
-            requires std::is_convertible_v<U, T> && std::is_convertible_v<V, T>
             explicit constexpr vector(const vector<1, U> &x, T y, const vector<1, V> &z) : x(static_cast<T>(x.x)), y(y), z(static_cast<T>(z.x)) {}
 
             template<typename U, typename V>
-            requires std::is_convertible_v<U, T> && std::is_convertible_v<V, T>
             explicit constexpr vector(T x, const vector<1, U> &y, const vector<1, V> &z) : x(x), y(static_cast<T>(y.x)), z(static_cast<T>(z.x)) {}
 
             template<typename U, typename V, typename W>
-            requires std::is_convertible_v<U, T> && std::is_convertible_v<V, T> && std::is_convertible_v<W, T>
             explicit constexpr vector(const vector<1, U> &x, const vector<1, V> &y, const vector<1, W> &z) : x(static_cast<T>(x.x)), y(static_cast<T>(y.x)), z(static_cast<T>(z.x)) {}
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
             explicit constexpr vector(const vector<2, U> &xy, T z) : x(static_cast<T>(xy.x)), y(static_cast<T>(xy.y)), z(y) {}
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
             explicit constexpr vector(T x, const vector<2, U> &yz) : x(x), y(static_cast<T>(y.x)), z(static_cast<T>(yz.y)) {}
 
             template<typename U, typename V>
-            requires std::is_convertible_v<U, T> && std::is_convertible_v<V, T>
             explicit constexpr vector(const vector<1, U> &x, const vector<2, V> &yz) : x(static_cast<T>(x.x)), y(static_cast<T>(yz.x)), z(static_cast<T>(yz.y)) {}
 
             template<typename U, typename V>
-            requires std::is_convertible_v<U, T> && std::is_convertible_v<V, T>
             explicit constexpr vector(const vector<2, U> &xy, const vector<1, V> &z) : x(static_cast<T>(xy.x)), y(static_cast<T>(xy.y)), z(static_cast<T>(z.x)) {}
 
             // Conversions from other vector types
 
             template<typename U>
-            requires std::is_convertible_v<U, T>
             explicit constexpr vector(const vector<4, U> &other) : x(static_cast<T>(other.x)), y(static_cast<T>(other.y)), z(static_cast<T>(other.z)) {}
 
+            template<size_t N, typename U>
+            requires (N > 4)
+            explicit constexpr vector(const vector<N, U> &other) : x(static_cast<T>(other[0])), y(static_cast<T>(other[1])), z(static_cast<T>(other[2])) {}
+
             // Assignments
+
+            constexpr vector<3, T> &operator=(const vector<3, T> &other) = default;
+            constexpr vector<3, T> &operator=(vector<3, T> &&other) = default;
 
             template<typename U>
             requires std::is_convertible_v<U, T>
