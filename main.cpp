@@ -24,25 +24,11 @@
 int main(void) {
     zephyr::glfw::Window window(800, 600, "WindowTest");
 
-    glewExperimental = true;
-    if (glewInit() != GLEW_OK)
-        throw std::runtime_error("Could not initialize GLEW");
-
     zephyr::gl::Texture tex = zephyr::utils::loadTexture("../cloud.png");
-
-    // zephyr::gl::Shader vert = zephyr::utils::loadShader("../shader.vs", zephyr::gl::ShaderType::Vertex);
-    // zephyr::gl::Shader frag = zephyr::utils::loadShader("../shader.fs", zephyr::gl::ShaderType::Fragment);
-
     zephyr::gl::Program prog = zephyr::utils::loadProgram("../shader.vs", "../shader.fs");
-
-    // prog.attach(vert);
-    // prog.attach(frag);
-
-    // prog.link();
+    zephyr::gl::Uniform uni = prog.getUniform("tex");
 
     tex.activate(0);
-
-    zephyr::gl::Uniform uni = prog.getUniform("tex");
 
     float vertices[] = {
         -1.0f, -1.0f, 0.0f,     1.0f, 0.0f, 0.0f,       0.0f, 1.0f,
@@ -50,10 +36,6 @@ int main(void) {
         -1.0f,  1.0f, 0.0f,      0.0f, 1.0f, 1.0f,       0.0f, 0.0f,
         1.0f,  1.0f, 0.0f,      1.0f, 1.0f, 0.0f,       1.0f, 0.0f,
     };  
-
-    zephyr::math::vec2f a(4, 4);
-    zephyr::math::vec2f b(4, 4);
-    // zephyr::math::vec2f c = a % b;
 
     zephyr::gl::VertexArray VAO;
     VAO.bind();

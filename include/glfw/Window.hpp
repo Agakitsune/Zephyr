@@ -61,8 +61,12 @@ namespace zephyr::glfw {
     class Window {
         GLFWwindow *handle;
 
-        static bool init;
+        static bool _init;
+        static bool _glewInit;
         static bool defaultHints;
+
+        static void init();
+        static void glewInit();
 
         public:
             Window(int width, int height, const std::string &title);

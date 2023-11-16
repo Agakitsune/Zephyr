@@ -3,37 +3,27 @@
 
 namespace zephyr::glfw {
     
-    Window::Window(int width, int height, const std::string &title) {
-        if (!init)
+    void Window::init() {
+        if (!_init)
             glfwInit();
-        if (defaultHints) {
-            glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-            glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-            glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        }
-        handle = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
-        defaultHints = true;
-
-        glfwMakeContextCurrent(handle);
+        _init = true;
     }
 
-    Window::Window(int width, int height, std::string &&title) {
-        if (!init)
-            glfwInit();
-        if (defaultHints) {
-            glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-            glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-            glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    void Window::glewInit() {
+        if (!_glewInit) {
+            glewExperimental = true;
+            if (::glewInit() != GLEW_OK)
+                throw std::runtime_error("Could not initialize GLEW");
         }
-        handle = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
-        defaultHints = true;
-
-        glfwMakeContextCurrent(handle);
+        _glewInit = true;
     }
+
+    Window::Window(int width, int height, const std::string &title) : Window(width, height, title.c_str()) {}
+
+    Window::Window(int width, int height, std::string &&title) : Window(width, height, title) {}
 
     Window::Window(int width, int height, const char *title) {
-        if (!init)
-            glfwInit();
+        init();
         if (defaultHints) {
             glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
             glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
@@ -43,6 +33,8 @@ namespace zephyr::glfw {
         defaultHints = true;
 
         glfwMakeContextCurrent(handle);
+
+        glewInit();
     }
 
     Window::Window(Window &&other) noexcept {
@@ -145,34 +137,35 @@ namespace zephyr::glfw {
     }
 
     void Window::setHint(WindowAttribute attrib, int value) {
-        if (!init)
+        if (!_init)
             glfwInit();
         glfwWindowHint(static_cast<int>(attrib), value);
         defaultHints = false;
     }
 
     void Window::setHint(WindowAttribute attrib, const std::string &value) {
-        if (!init)
+        if (!_init)
             glfwInit();
         glfwWindowHintString(static_cast<int>(attrib), value.c_str());
         defaultHints = false;
     }
 
     void Window::setHint(WindowAttribute attrib, std::string &&value) {
-        if (!init)
+        if (!_init)
             glfwInit();
         glfwWindowHintString(static_cast<int>(attrib), value.c_str());
         defaultHints = false;
     }
 
     void Window::setHint(WindowAttribute attrib, const char *value) {
-        if (!init)
+        if (!_init)
             glfwInit();
         glfwWindowHintString(static_cast<int>(attrib), value);
         defaultHints = false;
     }
 
-    bool Window::init = false;
+    bool Window::_init = false;
+    bool Window::_glewInit = false;
     bool Window::defaultHints = true;
 
 } // namespace zephyr::glfw

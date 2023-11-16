@@ -1,3 +1,11 @@
+# Zephyr 0.5.1 - 16/11/2023
+
+### Changed Window Implementation
+
+* `zephyr::glfw`
+
+    * `Window` - Automaticaly calls `glewInit()` when first window is created
+
 # Zephyr 0.5.0 - 13/11/2023
 
 ### Added define `ZEPHYR_DEBUG`
