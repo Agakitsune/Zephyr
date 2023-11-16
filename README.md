@@ -1,3 +1,23 @@
+# Zephyr 0.7.0 - 16/11/2023
+
+### Added `zephyr::input`
+
+* `zephyr::input`
+
+    * New enum `Key`
+
+    * New function `isKeyPressed()`
+
+    * New function `isKeyReleased()`
+
+* General
+
+    * New function `construct()` - Construction function, marked with **__attribute((constructor))**
+
+    * New function `destruct()` - Destruction function, marked with **__attribute((destructor))**
+
+    * Added `glfwTerminate()` in `destruct()`
+
 # Zephyr 0.6.0 - 16/11/2023
 
 ### Added Projection Function

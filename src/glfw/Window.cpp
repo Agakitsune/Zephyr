@@ -46,6 +46,10 @@ namespace zephyr::glfw {
         }
     }
 
+    void Window::terminate() {
+        glfwTerminate();
+    }
+
     Window::Window(int width, int height, const std::string &title) : Window(width, height, title.c_str()) {}
 
     Window::Window(int width, int height, std::string &&title) : Window(width, height, title) {}

@@ -20,6 +20,8 @@
 #include "utils/Program.hpp"
 #include "utils/Clip.hpp"
 
+#include "input/Keyboard.hpp"
+
 #include <experimental/simd>
 
 int main(void) {
@@ -61,6 +63,9 @@ int main(void) {
 
         window.clear(zephyr::gl::ClearMask::Color);
 
+        if (zephyr::input::isKeyPressed(zephyr::input::Key::Z))
+            std::cout << "Z" << std::endl;
+
         tex.activate(0);
 
         prog.use();
@@ -72,7 +77,7 @@ int main(void) {
         window.swapBuffers();
     }
 
-    glfwTerminate();
+    // glfwTerminate();
 
     return 0;
 }
