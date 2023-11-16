@@ -18,23 +18,25 @@
 #include "utils/VertexArray.hpp"
 #include "utils/Texture.hpp"
 #include "utils/Program.hpp"
+#include "utils/Clip.hpp"
 
 #include <experimental/simd>
 
 int main(void) {
     zephyr::glfw::Window window(800, 600, "WindowTest");
 
-    zephyr::gl::Texture tex = zephyr::utils::loadTexture("../cloud.png");
+    zephyr::gl::Texture tex = zephyr::utils::loadTexture("../poyo.png");
     zephyr::gl::Program prog = zephyr::utils::loadProgram("../shader.vs", "../shader.fs");
     zephyr::gl::Uniform uni = prog.getUniform("tex");
+    zephyr::gl::Uniform mvp = prog.getUniform("mvp");
 
     tex.activate(0);
 
     float vertices[] = {
-        -1.0f, -1.0f, 0.0f,     1.0f, 0.0f, 0.0f,       0.0f, 1.0f,
-        1.0f, -1.0f, 0.0f,      1.0f, 0.0f, 1.0f,       1.0f, 1.0f,
-        -1.0f,  1.0f, 0.0f,      0.0f, 1.0f, 1.0f,       0.0f, 0.0f,
-        1.0f,  1.0f, 0.0f,      1.0f, 1.0f, 0.0f,       1.0f, 0.0f,
+        0.0f, 0.0f, 0.0f,       1.0f, 1.0f, 1.0f,       0.0f, 0.0f,
+        16.0f, 0.0f, 0.0f,      1.0f, 1.0f, 1.0f,       1.0f, 0.0f,
+        0.0f, 16.0f, 0.0f,      1.0f, 1.0f, 1.0f,       0.0f, 1.0f,
+        16.0f, 16.0f, 0.0f,     1.0f, 1.0f, 1.0f,       1.0f, 1.0f,
     };  
 
     zephyr::gl::VertexArray VAO;
@@ -47,6 +49,13 @@ int main(void) {
 
     zephyr::utils::useVertex<zephyr::math::vec3f, zephyr::math::vec3f, zephyr::math::vec2f>(0);
 
+    zephyr::math::matrix<4, 4, float> model(1.0f);
+    model = zephyr::math::scale(model, zephyr::math::vector<3, float>(4, 4, 1));
+    zephyr::math::matrix<4, 4, float> view(1.0f);
+    zephyr::math::matrix<4, 4, float> projection = zephyr::utils::ortho(0, 0, 800, 600, 0.1f, 100.0f);
+
+    zephyr::math::matrix<4, 4, float> MVP = model * view * projection;
+
     while (!window.shouldClose()) {
         window.pollEvents();
 
@@ -56,6 +65,7 @@ int main(void) {
 
         prog.use();
         uni.set(0);
+        mvp.set4x4(1, false, &MVP[0][0]);
         
         VAO.bind();
         window.drawArrays(zephyr::gl::DrawMode::TriangleStrip, 0, 4);

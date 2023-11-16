@@ -111,6 +111,9 @@ namespace zephyr::math {
 
             // Assignments
 
+            constexpr matrix<M, N, T> &operator=(const matrix<M, N, T> &other) = default;
+            constexpr matrix<M, N, T> &operator=(matrix<M, N, T> &&other) = default;
+
             template<size_t O, size_t P, typename U>
             requires std::is_convertible_v<U, T> && (O > M) && (P > N)
             constexpr matrix<M, N, T> &operator=(const matrix<O, P, U> &other) {

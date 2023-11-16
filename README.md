@@ -1,3 +1,13 @@
+# Zephyr 0.6.0 - 16/11/2023
+
+### Added Projection Function
+
+* `zephyr::utils`
+
+    * New function `ortho()` - Generate a orthonormal projection matrix
+
+    * New function `perspective()` - Generate a persepctive projection matrix
+
 # Zephyr 0.5.2 - 16/11/2023
 
 ### Added Viewport automatic resizing
@@ -30,7 +40,7 @@
 
 * `zephyr::utils`
 
-    :green_circle: New function `loadProgram()` - load multiple shader to make a Program
+    * New function `loadProgram()` - load multiple shader to make a Program
 
     * `loadShader()` - added Debug message
 
@@ -66,7 +76,7 @@
 
 * `zephyr::math`
 
-    :green_circle: New type `matrix` (experimental) [^1]
+    * New type `matrix` (experimental) [^1]
 
 # Zephyr 0.3.0 - 21/10/2023
 
@@ -74,52 +84,52 @@
 
 * `zephyr::math`
 
-    :green_circle: Usage of `std::experimental::simd` for parallelization
+    * Usage of `std::experimental::simd` for parallelization
 
-    :green_circle: New function `swizzle()` - returns a new vector with the specified components
+    * New function `swizzle()` - returns a new vector with the specified components
 
-    :red_circle: Removed type `dynamic_vector`
+    * Removed type `dynamic_vector`
 
-    :red_circle: Removed `operator[]` and  for `vector` type
+    * Removed `operator[]` and  for `vector` type
 
 # Zephyr 0.2.0 - 18/10/2023
 
 ### Simple GL Wrapper
 
-:green_circle: Added Internal Library `gl`
+* Added Internal Library `gl`
 
-:green_circle: Added Internal Library `utils`
+* Added Internal Library `utils`
 
 * `zephyr::gl`
 
-    :green_circle: New type `Buffer`
+    * New type `Buffer`
 
-    :green_circle: New type `Program`
+    * New type `Program`
 
-    :green_circle: New type `Shader`
+    * New type `Shader`
 
-    :green_circle: New type `Texture`
+    * New type `Texture`
 
-    :green_circle: New type `Uniform`
+    * New type `Uniform`
 
-    :green_circle: New type `VertexArray`
+    * New type `VertexArray`
 
 * `zephyr::utils`
 
-    :green_circle: New function `loadTexture()` - loads a 2D Texture from a file
+    * New function `loadTexture()` - loads a 2D Texture from a file
 
-    :green_circle: New function `loadShader()`
+    * New function `loadShader()`
 
 # Zephyr 0.1.0 - 16/10/2023
 
 ### Simple GLFW Window Wrapper
 
-:green_circle: Added Internal Library `glfw`
+* Added Internal Library `glfw`
 
-:green_circle: Added Internal Library `math`
+* Added Internal Library `math`
 
 * `zephyr::glfw`
 
-    :green_circle: New type `Window`
+    * New type `Window`
 
 [^1]: This feature may not work completely
