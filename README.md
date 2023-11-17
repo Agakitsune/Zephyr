@@ -1,3 +1,47 @@
+# Zephyr 0.9.0 - 17/11/2023
+
+### Added `zephyr::input::Mouse` and `zephyr::input::Joystick`
+
+> *Joystick has only been tested with a Xbox 360 Controller, need further testing*
+
+* `zephyr::input`
+
+    * New enum `MouseButton`
+
+    * New enum `Joystick`
+
+    * New enum `JoystickAxis`
+
+    * New enum `JoystickFullAxis`
+
+    * New enum `JoystickButton`
+
+    * New struct `JoystickDeadZone` - Allows to set deadzones for joystick and triggers (experimental)
+
+    > *Experimental: Triggers dead zones have not been implemented yet*
+
+* `zephyr::glfw`
+
+    * New method `isMouseButtonPressed()`
+
+    * New method `isMouseButtonReleased()`
+
+    * New method `getMousePos()`
+
+    * New method `setMousePos()`
+
+    * New method `getMouseScroll()`
+
+    * New method `isJoystickConnected()`
+
+    * New method `isJoystickButtonPressed()`
+    
+    * New method `isJoystickButtonReleased()`
+    
+    * New method `getJoystickAxis()`
+    
+    * New method `getJoystickAxis()`
+
 # Zephyr 0.8.0 - 17/11/2023
 
 ### Changed Input handling
@@ -112,7 +156,7 @@
 
 * `zephyr::math`
 
-    * New type `matrix` (experimental) [^1]
+    * New type `matrix` (experimental)
 
 # Zephyr 0.3.0 - 21/10/2023
 
@@ -167,5 +211,3 @@
 * `zephyr::glfw`
 
     * New type `Window`
-
-[^1]: This feature may not work completely

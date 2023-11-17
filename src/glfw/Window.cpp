@@ -46,6 +46,14 @@ namespace zephyr::glfw {
         }
     }
 
+    void Window::scrollCallback(GLFWwindow *window, double xoffset, double yoffset) {
+        (void)window;
+        if (current) {
+            current->xoffset = xoffset;
+            current->yoffset = yoffset;
+        }
+    }
+
     void Window::terminate() {
         glfwTerminate();
     }
@@ -67,6 +75,7 @@ namespace zephyr::glfw {
         glfwMakeContextCurrent(handle);
 
         glfwSetFramebufferSizeCallback(handle, &resizeCallback);
+        glfwSetScrollCallback(handle, &scrollCallback);
 
         glewInit();
     }
@@ -147,6 +156,7 @@ namespace zephyr::glfw {
     }
 
     void Window::pollEvents() const {
+        current = const_cast<Window *>(this);
         glfwPollEvents();
     }
 
@@ -178,6 +188,127 @@ namespace zephyr::glfw {
         return glfwGetKey(handle, static_cast<int>(key)) == GLFW_RELEASE;
     }
 
+    bool Window::isMouseButtonPressed(const input::MouseButton button) const {
+        return glfwGetMouseButton(handle, static_cast<int>(button)) == GLFW_PRESS;
+    }
+
+    bool Window::isMouseButtonReleased(const input::MouseButton button) const {
+        return glfwGetMouseButton(handle, static_cast<int>(button)) == GLFW_RELEASE;
+    }
+
+    zephyr::math::vec2d Window::getMousePos() const {
+        zephyr::math::vec2d pos;
+        glfwGetCursorPos(handle, &pos.x, &pos.y);
+        return pos;
+    }
+
+    void Window::setMousePos(double x, double y) const {
+        glfwSetCursorPos(handle, x, y);
+    }
+
+    void Window::setMousePos(const zephyr::math::vec2d &pos) const {
+        glfwSetCursorPos(handle, pos.x, pos.y);
+    }
+
+    zephyr::math::vec2d Window::getMouseScroll() const {
+        zephyr::math::vec2d scroll = zephyr::math::vec2d(xoffset, yoffset);
+        current = const_cast<Window *>(this);
+        scrollCallback(handle, 0, 0);
+        return scroll;
+    }
+
+    bool Window::isJoystickConnected(const input::Joystick joystick) const {
+        return glfwJoystickIsGamepad(static_cast<int>(joystick));
+    }
+
+    bool Window::isJoystickButtonPressed(const input::Joystick joystick, const input::JoystickButton button) const {
+        GLFWgamepadstate state;
+
+        if (glfwGetGamepadState(static_cast<int>(joystick), &state)) {
+            return state.buttons[static_cast<int>(button)] == GLFW_PRESS;
+        }
+        return false;
+    }
+
+    bool Window::isJoystickButtonReleased(const input::Joystick joystick, const input::JoystickButton button) const {
+        return !isJoystickButtonPressed(joystick, button);
+    }
+
+    float Window::getJoystickAxis(const input::Joystick joystick, const input::JoystickAxis axis) const {
+        GLFWgamepadstate state;
+
+        if (glfwGetGamepadState(static_cast<int>(joystick), &state)) {
+            switch (axis) {
+                case input::JoystickAxis::LeftX:
+                    return getJoystickAxis(joystick, input::JoystickFullAxis::Left).x;
+                case input::JoystickAxis::LeftY:
+                    return getJoystickAxis(joystick, input::JoystickFullAxis::Left).y;
+                case input::JoystickAxis::RightX:
+                    return getJoystickAxis(joystick, input::JoystickFullAxis::Right).x;
+                case input::JoystickAxis::RightY:
+                    return getJoystickAxis(joystick, input::JoystickFullAxis::Right).y;
+                case input::JoystickAxis::LeftTrigger:
+                    return getJoystickAxis(joystick, input::JoystickFullAxis::Trigger).x;
+                case input::JoystickAxis::RightTrigger:
+                    return getJoystickAxis(joystick, input::JoystickFullAxis::Trigger).y;
+            }
+        }
+        return 0.0f;
+    }
+
+    zephyr::math::vec2f Window::getJoystickAxis(const input::Joystick joystick, const input::JoystickFullAxis axis) const {
+        GLFWgamepadstate state;
+
+        float x = 0.0f;
+        float y = 0.0f;
+        float value = 0.0f;
+        float reduced = 0.0f;
+        float angle = 0.0f;
+        if (glfwGetGamepadState(static_cast<int>(joystick), &state)) {
+            switch (axis) {
+                case input::JoystickFullAxis::Left:
+                    x = state.axes[GLFW_GAMEPAD_AXIS_LEFT_X];
+                    y = state.axes[GLFW_GAMEPAD_AXIS_LEFT_Y];
+                    value = std::pow(x, 2) + std::pow(y, 2);
+                    reduced = std::clamp<float>((1 / (1 - deadZones[joystick].leftZone)) * (value - deadZones[joystick].leftZone), 0.0f, 1.0f);
+                    angle = std::atan2(y, x);
+                    x = reduced * std::cos(angle);
+                    y = reduced * std::sin(angle);
+                    break;
+                case input::JoystickFullAxis::Right:
+                    x = state.axes[GLFW_GAMEPAD_AXIS_RIGHT_X];
+                    y = state.axes[GLFW_GAMEPAD_AXIS_RIGHT_Y];
+                    value = std::pow(x, 2) + std::pow(y, 2);
+                    reduced = std::clamp<float>((1 / (1 - deadZones[joystick].leftZone)) * (value - deadZones[joystick].leftZone), 0.0f, 1.0f);
+                    angle = std::atan2(y, x);
+                    x = reduced * std::cos(angle);
+                    y = reduced * std::sin(angle);
+                    break;
+                case input::JoystickFullAxis::Trigger:
+                    x = state.axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER];
+                    y = state.axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER];
+                    break;
+            }
+        }
+        return zephyr::math::vec2f(x, y);
+    }
+
+    void Window::showCursor() const {
+        glfwSetInputMode(handle, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    }
+
+    void Window::hideCursor() const {
+        glfwSetInputMode(handle, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+    }
+
+    void Window::lockCursor() const {
+        glfwSetInputMode(handle, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    }
+
+    void Window::unlockCursor() const {
+        glfwSetInputMode(handle, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    }
+
     void Window::setHint(WindowAttribute attrib, int value) {
         if (!_init)
             glfwInit();
@@ -205,6 +336,8 @@ namespace zephyr::glfw {
         glfwWindowHintString(static_cast<int>(attrib), value);
         defaultHints = false;
     }
+
+    Window *Window::current = nullptr;
 
     bool Window::_init = false;
     bool Window::_glewInit = false;

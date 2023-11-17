@@ -2,10 +2,15 @@
 #pragma once
 
 #include <string>
+#include <cmath>
+#include <algorithm>
 
 #include "gl/Utils.hpp"
 #include "gl/Type.hpp"
+
 #include "input/Keyboard.hpp"
+#include "input/Mouse.hpp"
+#include "input/Joystick.hpp"
 
 #include "math/math.hpp"
 
@@ -62,6 +67,13 @@ namespace zephyr::glfw {
     class Window {
         GLFWwindow *handle;
 
+        double xoffset = 0;
+        double yoffset = 0;
+
+        input::JoystickDeadZone deadZones[input::Joystick::JoystickCount];
+
+        static Window *current;
+
         static bool _init;
         static bool _glewInit;
         static bool defaultHints;
@@ -70,6 +82,7 @@ namespace zephyr::glfw {
         static void glewInit();
 
         static void resizeCallback(GLFWwindow *window, int width, int height);
+        static void scrollCallback(GLFWwindow *window, double xoffset, double yoffset);
 
         public:
             static void terminate();
@@ -117,6 +130,28 @@ namespace zephyr::glfw {
 
             bool isKeyPressed(const input::Key key) const;
             bool isKeyReleased(const input::Key key) const;
+
+            bool isMouseButtonPressed(const input::MouseButton button) const;
+            bool isMouseButtonReleased(const input::MouseButton button) const;
+
+            zephyr::math::vec2d getMousePos() const;
+            void setMousePos(double x, double y) const;
+            void setMousePos(const zephyr::math::vec2d &pos) const;
+            
+            zephyr::math::vec2d getMouseScroll() const;
+
+            bool isJoystickConnected(const input::Joystick joystick) const;
+
+            bool isJoystickButtonPressed(const input::Joystick joystick, const input::JoystickButton button) const;
+            bool isJoystickButtonReleased(const input::Joystick joystick, const input::JoystickButton button) const;
+
+            float getJoystickAxis(const input::Joystick joystick, const input::JoystickAxis axis) const;
+            zephyr::math::vec2f getJoystickAxis(const input::Joystick joystick, const input::JoystickFullAxis axis) const;
+
+            void showCursor() const;
+            void hideCursor() const;
+            void lockCursor() const;
+            void unlockCursor() const;
 
             static void setHint(WindowAttribute attrib, int value);
             static void setHint(WindowAttribute attrib, const std::string &value);

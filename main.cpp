@@ -58,6 +58,8 @@ int main(void) {
 
     zephyr::math::matrix<4, 4, float> MVP = model * view * projection;
 
+    // window.lockCursor();
+
     while (!window.shouldClose()) {
         window.pollEvents();
 
@@ -65,6 +67,22 @@ int main(void) {
 
         if (window.isKeyPressed(zephyr::input::Key::W))
             std::cout << "Z" << std::endl;
+        std::cout << "---" << std::endl;
+        std::cout << window.isJoystickButtonPressed(zephyr::input::Joystick::Joystick1, zephyr::input::JoystickButton::A) << std::endl;
+        std::cout << window.isJoystickButtonPressed(zephyr::input::Joystick::Joystick1, zephyr::input::JoystickButton::B) << std::endl;
+        std::cout << window.isJoystickButtonPressed(zephyr::input::Joystick::Joystick1, zephyr::input::JoystickButton::X) << std::endl;
+        std::cout << window.isJoystickButtonPressed(zephyr::input::Joystick::Joystick1, zephyr::input::JoystickButton::Y) << std::endl;
+        std::cout << window.isJoystickButtonPressed(zephyr::input::Joystick::Joystick1, zephyr::input::JoystickButton::LeftBumper) << std::endl;
+        std::cout << window.isJoystickButtonPressed(zephyr::input::Joystick::Joystick1, zephyr::input::JoystickButton::RightBumper) << std::endl;
+        std::cout << window.isJoystickButtonPressed(zephyr::input::Joystick::Joystick1, zephyr::input::JoystickButton::Back) << std::endl;
+        std::cout << window.isJoystickButtonPressed(zephyr::input::Joystick::Joystick1, zephyr::input::JoystickButton::Start) << std::endl;
+        std::cout << window.isJoystickButtonPressed(zephyr::input::Joystick::Joystick1, zephyr::input::JoystickButton::Guide) << std::endl;
+        std::cout << window.isJoystickButtonPressed(zephyr::input::Joystick::Joystick1, zephyr::input::JoystickButton::LeftThumb) << std::endl;
+        std::cout << window.isJoystickButtonPressed(zephyr::input::Joystick::Joystick1, zephyr::input::JoystickButton::RightThumb) << std::endl;
+        std::cout << window.isJoystickButtonPressed(zephyr::input::Joystick::Joystick1, zephyr::input::JoystickButton::DpadUp) << std::endl;
+        std::cout << window.isJoystickButtonPressed(zephyr::input::Joystick::Joystick1, zephyr::input::JoystickButton::DpadLeft) << std::endl;
+        std::cout << window.isJoystickButtonPressed(zephyr::input::Joystick::Joystick1, zephyr::input::JoystickButton::DpadDown) << std::endl;
+        std::cout << window.isJoystickButtonPressed(zephyr::input::Joystick::Joystick1, zephyr::input::JoystickButton::DpadRight) << std::endl;
 
         tex.activate(0);
 
