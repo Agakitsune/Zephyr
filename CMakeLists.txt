@@ -24,7 +24,6 @@ file(GLOB SOURCE
 
     ${PROJECT_SOURCE_DIR}/src/gl/*.cpp
     ${PROJECT_SOURCE_DIR}/src/glfw/*.cpp
-    ${PROJECT_SOURCE_DIR}/src/input/*.cpp
     ${PROJECT_SOURCE_DIR}/src/utils/*.cpp
 )
 

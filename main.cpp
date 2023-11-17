@@ -63,7 +63,7 @@ int main(void) {
 
         window.clear(zephyr::gl::ClearMask::Color);
 
-        if (zephyr::input::isKeyPressed(zephyr::input::Key::Z))
+        if (window.isKeyPressed(zephyr::input::Key::W))
             std::cout << "Z" << std::endl;
 
         tex.activate(0);

@@ -170,6 +170,14 @@ namespace zephyr::glfw {
         glClear(static_cast<GLbitfield>(mask));
     }
 
+    bool Window::isKeyPressed(const input::Key key) const {
+        return glfwGetKey(handle, static_cast<int>(key)) == GLFW_PRESS;
+    }
+
+    bool Window::isKeyReleased(const input::Key key) const {
+        return glfwGetKey(handle, static_cast<int>(key)) == GLFW_RELEASE;
+    }
+
     void Window::setHint(WindowAttribute attrib, int value) {
         if (!_init)
             glfwInit();

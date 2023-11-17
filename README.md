@@ -1,3 +1,19 @@
+# Zephyr 0.8.0 - 17/11/2023
+
+### Changed Input handling
+
+* `zephyr::glfw::window`
+
+    * New method `isKeyPressed()`
+
+    * New method `isKeyReleased()`
+
+* `zephyr::input`
+
+    * Removed function `isKeyPressed()`
+
+    * Removed function `isKeyReleased()`
+
 # Zephyr 0.7.0 - 16/11/2023
 
 ### Added `zephyr::input`

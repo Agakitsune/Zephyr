@@ -5,6 +5,7 @@
 
 #include "gl/Utils.hpp"
 #include "gl/Type.hpp"
+#include "input/Keyboard.hpp"
 
 #include "math/math.hpp"
 
@@ -113,6 +114,9 @@ namespace zephyr::glfw {
             void drawArrays(gl::DrawMode mode, GLint first, GLsizei count) const;
 
             void clear(gl::ClearMask mask) const;
+
+            bool isKeyPressed(const input::Key key) const;
+            bool isKeyReleased(const input::Key key) const;
 
             static void setHint(WindowAttribute attrib, int value);
             static void setHint(WindowAttribute attrib, const std::string &value);
