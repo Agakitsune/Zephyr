@@ -1,3 +1,13 @@
+# Zephyr 0.9.1 - 19/11/2023
+
+### Update Clip functions
+
+* `zephyr::utils`
+
+    * `ortho()` - Change values to use Row-Major order matrix
+
+    * `perspective()` - Change values to use Row-Major order matrix
+
 # Zephyr 0.9.0 - 17/11/2023
 
 ### Added `zephyr::input::Mouse` and `zephyr::input::Joystick`

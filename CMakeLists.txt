@@ -117,7 +117,6 @@ if (NOT ${CMAKE_BUILD_TYPE} OR ${CMAKE_BUILD_TYPE} STREQUAL "Debug")
                 -Wall
                 -Wextra
                 -Wpedantic
-                -Werror
         )
     endif()
 

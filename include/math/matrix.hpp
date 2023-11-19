@@ -318,11 +318,15 @@ namespace zephyr::math {
 
     template<size_t M, size_t N, size_t P, typename T, typename U>
     constexpr matrix<M, P, T> operator*(const matrix<M, N, T> &lhs, const matrix<N, P, U> &rhs) {
+        // std::cout << lhs << std::endl;
+        // std::cout << rhs << std::endl;
         matrix<M, P, T> temp;
         for (size_t i = 0; i < M; ++i) {
             for (size_t j = 0; j < P; ++j) {
+                // std::cout << "Calculating for " << i << "x" << j << std::endl;
                 temp[i][j] = 0;
                 for (size_t k = 0; k < N; ++k) {
+                    // std::cout << "Adding " << lhs[i][k] << " * " << rhs[k][j] << std::endl;
                     temp[i][j] += lhs[i][k] * rhs[k][j];
                 }
             }
@@ -402,9 +406,9 @@ namespace zephyr::math {
     template<typename T>
     matrix<4, 4, T> translate(const matrix<4, 4, T> &mat, const vector<3, T> &vec) {
         matrix<4, 4, T> temp = mat;
-        temp[0][3] = temp[0][0] + temp[0][3] * vec.x;
-        temp[1][3] = temp[1][0] + temp[1][3] * vec.y;
-        temp[2][3] = temp[2][0] + temp[2][3] * vec.z;
+        temp[0][3] = (temp[0][0] + temp[0][3]) * vec.x;
+        temp[1][3] = (temp[1][1] + temp[1][3]) * vec.y;
+        temp[2][3] = (temp[2][2] + temp[2][3]) * vec.z;
         return temp;
     }
 
