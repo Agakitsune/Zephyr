@@ -1,3 +1,9 @@
+# Zephyr 0.9.2 - 27/11/2023
+
+### Tested on PS4 and Switch Pro Controllers
+
+> *Joystick has been testted with a PS4 and Switch Pro Controller*
+
 # Zephyr 0.9.1 - 19/11/2023
 
 ### Update Clip functions
