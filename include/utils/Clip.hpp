@@ -2,6 +2,7 @@
 #pragma once
 
 #include "math/matrix.hpp"
+#include "math/vector3.hpp"
 
 namespace zephyr::utils {
 
@@ -28,5 +29,15 @@ namespace zephyr::utils {
      * @return math::matrix<4, 4, float> The perspective projection matrix.
      */
     math::matrix<4, 4, float> perspective(float fov, float aspect, float near, float far);
+
+    /**
+     * @brief Returns a view matrix.
+     * 
+     * @param eye The position of the camera.
+     * @param center The position of the object the camera is looking at.
+     * @param up The up vector of the camera.
+     * @return math::matrix<4, 4, float> The view matrix.
+     */
+    math::matrix<4, 4, float> lookAt(math::vector<3, float> eye, math::vector<3, float> center, math::vector<3, float> up);
 
 } // namespace zephyr::util

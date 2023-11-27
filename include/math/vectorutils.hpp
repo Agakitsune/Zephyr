@@ -24,10 +24,11 @@ namespace zephyr::math {
             std::experimental::fixed_size_simd<T, N> a(vec.data(), std::experimental::vector_aligned);
             return vector<N, T>(-a);
         #else
+            vector<N, T> result;
             for (size_t i = 0; i < N; ++i) {
-                vec[i] = -vec[i];
+                result[i] = -vec[i];
             }
-            return vec;
+            return result;
         #endif
     }
 
@@ -40,10 +41,11 @@ namespace zephyr::math {
             a += b;
             return vector<N, T>(a);
         #else
+            vector<N, T> result;
             for (size_t i = 0; i < N; ++i) {
-                vec[i] += scalar;
+                result[i] = vec[i] + scalar;
             }
-            return vec;
+            return result;
         #endif
     }
 
@@ -56,10 +58,11 @@ namespace zephyr::math {
             a += b;
             return vector<N, T>(a);
         #else
+            vector<N, T> result;
             for (size_t i = 0; i < N; ++i) {
-                vec[i] += scalar;
+                result[i] = vec[i] + scalar;
             }
-            return vec;
+            return result;
         #endif
     }
 
@@ -72,10 +75,11 @@ namespace zephyr::math {
             a -= b;
             return vector<N, T>(a);
         #else
+            vector<N, T> result;
             for (size_t i = 0; i < N; ++i) {
-                vec[i] -= scalar;
+                result[i] = vec[i] - scalar;
             }
-            return vec;
+            return result;
         #endif
     }
 
@@ -88,10 +92,11 @@ namespace zephyr::math {
             a += -a;
             return vector<N, T>(a);
         #else
+            vector<N, T> result;
             for (size_t i = 0; i < N; ++i) {
-                vec[i] += -scalar;
+                result[i] = scalar - vec[i];
             }
-            return vec;
+            return result;
         #endif
     }
 
@@ -104,10 +109,11 @@ namespace zephyr::math {
             a *= b;
             return vector<N, T>(a);
         #else
+            vector<N, T> result;
             for (size_t i = 0; i < N; ++i) {
-                vec[i] *= scalar;
+                result[i] = vec[i] * scalar;
             }
-            return vec;
+            return result;
         #endif
     }
 
@@ -120,10 +126,11 @@ namespace zephyr::math {
             a *= b;
             return vector<N, T>(a);
         #else
+            vector<N, T> result;
             for (size_t i = 0; i < N; ++i) {
-                vec[i] *= scalar;
+                result[i] = vec[i] * scalar;
             }
-            return vec;
+            return result;
         #endif
     }
 
@@ -136,10 +143,11 @@ namespace zephyr::math {
             a /= b;
             return vector<N, T>(a);
         #else
+            vector<N, T> result;
             for (size_t i = 0; i < N; ++i) {
-                vec[i] /= scalar;
+                result[i] = vec[i] / scalar;
             }
-            return vec;
+            return result;
         #endif
     }
 
@@ -169,8 +177,9 @@ namespace zephyr::math {
             a %= b;
             return vector<N, T>(a);
         #else
+            vector<N, T> result;
             for (size_t i = 0; i < N; ++i) {
-                vec[i] %= scalar;
+                result[i] = vec[i] % scalar;
             }
             return vec;
         #endif
@@ -204,8 +213,9 @@ namespace zephyr::math {
             a &= b;
             return vector<N, T>(a);
         #else
+            vector<N, T> result;
             for (size_t i = 0; i < N; ++i) {
-                vec[i] &= scalar;
+                result[i] = scalar & vec[i];
             }
             return vec;
         #endif
@@ -237,8 +247,9 @@ namespace zephyr::math {
             a |= b;
             return vector<N, T>(a);
         #else
+            vector<N, T> result;
             for (size_t i = 0; i < N; ++i) {
-                vec[i] |= scalar;
+                result[i] = scalar | vec[i];
             }
             return vec;
         #endif
@@ -270,8 +281,9 @@ namespace zephyr::math {
             a ^= b;
             return vector<N, T>(a);
         #else
+            vector<N, T> result;
             for (size_t i = 0; i < N; ++i) {
-                vec[i] ^= scalar;
+                result[i] = scalar ^ vec[i];
             }
             return vec;
         #endif
@@ -303,29 +315,30 @@ namespace zephyr::math {
             a <<= b;
             return vector<N, T>(a);
         #else
+            vector<N, T> result;
             for (size_t i = 0; i < N; ++i) {
-                vec[i] <<= scalar;
+                result[i] = vec[i] << scalar;
             }
             return vec;
         #endif
     }
 
-    template<typename T, typename U, size_t N>
-    requires std::is_integral_v<T> && std::is_integral_v<U>
-    constexpr vector<N, T> operator<<(U scalar, const vector<N, T> &vec) {
-        #ifdef ZEPHYR_EXPERIMENTAL
-            const std::experimental::fixed_size_simd<U, N> a([vec](int i) { return static_cast<U>(vec.data()[i]); });
-            std::experimental::fixed_size_simd<U, N> b(scalar);
-            b <<= a;
-            return vector<N, T>(b);
-        #else
-            vector<N, T> result;
-            for (size_t i = 0; i < N; ++i) {
-                result[i] = scalar << vec[i];
-            }
-            return vec;
-        #endif
-    }
+    // template<typename T, typename U, size_t N>
+    // requires std::is_integral_v<T> && std::is_integral_v<U>
+    // constexpr vector<N, T> operator<<(U scalar, const vector<N, T> &vec) {
+    //     #ifdef ZEPHYR_EXPERIMENTAL
+    //         const std::experimental::fixed_size_simd<U, N> a([vec](int i) { return static_cast<U>(vec.data()[i]); });
+    //         std::experimental::fixed_size_simd<U, N> b(scalar);
+    //         b <<= a;
+    //         return vector<N, T>(b);
+    //     #else
+    //         vector<N, T> result;
+    //         for (size_t i = 0; i < N; ++i) {
+    //             result[i] = scalar << vec[i];
+    //         }
+    //         return vec;
+    //     #endif
+    // }
 
     template<typename T, typename U, size_t N>
     requires std::is_integral_v<T> && std::is_integral_v<U>
@@ -336,29 +349,30 @@ namespace zephyr::math {
             a >>= b;
             return vector<N, T>(a);
         #else
+            vector<N, T> result;
             for (size_t i = 0; i < N; ++i) {
-                vec[i] >>= scalar;
+                result[i] = vec[i] >> scalar;
             }
             return vec;
         #endif
     }
 
-    template<typename T, typename U, size_t N>
-    requires std::is_integral_v<T> && std::is_integral_v<U>
-    constexpr vector<N, T> operator>>(U scalar, const vector<N, T> &vec) {
-        #ifdef ZEPHYR_EXPERIMENTAL
-            const std::experimental::fixed_size_simd<U, N> a([vec](int i) { return static_cast<U>(vec.data()[i]); });
-            std::experimental::fixed_size_simd<U, N> b(scalar);
-            b >>= a;
-            return vector<N, T>(b);
-        #else
-            vector<N, T> result;
-            for (size_t i = 0; i < N; ++i) {
-                result[i] = scalar >> vec[i];
-            }
-            return vec;
-        #endif
-    }
+    // template<typename T, typename U, size_t N>
+    // requires std::is_integral_v<T> && std::is_integral_v<U>
+    // constexpr vector<N, T> operator>>(U scalar, const vector<N, T> &vec) {
+    //     #ifdef ZEPHYR_EXPERIMENTAL
+    //         const std::experimental::fixed_size_simd<U, N> a([vec](int i) { return static_cast<U>(vec.data()[i]); });
+    //         std::experimental::fixed_size_simd<U, N> b(scalar);
+    //         b >>= a;
+    //         return vector<N, T>(b);
+    //     #else
+    //         vector<N, T> result;
+    //         for (size_t i = 0; i < N; ++i) {
+    //             result[i] = scalar >> vec[i];
+    //         }
+    //         return vec;
+    //     #endif
+    // }
 
     template<typename T, size_t N>
     requires std::is_integral_v<T>
@@ -367,10 +381,11 @@ namespace zephyr::math {
             std::experimental::fixed_size_simd<T, N> a(vec.data(), std::experimental::vector_aligned);
             return vector<N, T>(~a);
         #else
+            vector<N, T> result;
             for (size_t i = 0; i < N; ++i) {
-                vec[i] = ~vec[i];
+                result[i] = ~vec[i];
             }
-            return vec;
+            return result;
         #endif
     }
 
@@ -407,10 +422,11 @@ namespace zephyr::math {
             a += b;
             return vector<N, T>(a);
         #else
+            vector<N, T> result;
             for (size_t i = 0; i < N; ++i) {
-                lhs[i] += rhs[i];
+                result[i] = lhs[i] + rhs[i];
             }
-            return lhs;
+            return result;
         #endif
     }
 
@@ -422,10 +438,11 @@ namespace zephyr::math {
             a -= b;
             return vector<N, T>(a);
         #else
+            vector<N, T> result;
             for (size_t i = 0; i < N; ++i) {
-                lhs[i] -= rhs[i];
+                result[i] = lhs[i] - rhs[i];
             }
-            return lhs;
+            return result;
         #endif
     }
 
@@ -437,10 +454,11 @@ namespace zephyr::math {
             a *= b;
             return vector<N, T>(a);
         #else
+            vector<N, T> result;
             for (size_t i = 0; i < N; ++i) {
-                lhs[i] *= rhs[i];
+                result[i] = lhs[i] * rhs[i];
             }
-            return lhs;
+            return result;
         #endif
     }
 
@@ -452,10 +470,11 @@ namespace zephyr::math {
             a /= b;
             return vector<N, T>(a);
         #else
+            vector<N, T> result;
             for (size_t i = 0; i < N; ++i) {
-                lhs[i] /= rhs[i];
+                result[i] = lhs[i] / rhs[i];
             }
-            return lhs;
+            return result;
         #endif
     }
 
@@ -468,10 +487,11 @@ namespace zephyr::math {
             a %= b;
             return vector<N, T>(a);
         #else
+            vector<N, T> result;
             for (size_t i = 0; i < N; ++i) {
-                lhs[i] %= rhs[i];
+                result[i] = lhs[i] % rhs[i];
             }
-            return lhs;
+            return result;
         #endif
     }
 
@@ -486,10 +506,11 @@ namespace zephyr::math {
             a &= b;
             return vector<N, T>(a);
         #else
+            vector<N, T> result;
             for (size_t i = 0; i < N; ++i) {
-                lhs[i] &= rhs[i];
+                result[i] = lhs[i] & rhs[i];
             }
-            return lhs;
+            return result;
         #endif
     }
 
@@ -502,10 +523,11 @@ namespace zephyr::math {
             a |= b;
             return vector<N, T>(a);
         #else
+            vector<N, T> result;
             for (size_t i = 0; i < N; ++i) {
-                lhs[i] |= rhs[i];
+                result[i] = lhs[i] | rhs[i];
             }
-            return lhs;
+            return result;
         #endif
     }
 
@@ -518,10 +540,11 @@ namespace zephyr::math {
             a ^= b;
             return vector<N, T>(a);
         #else
+            vector<N, T> result;
             for (size_t i = 0; i < N; ++i) {
-                lhs[i] ^= rhs[i];
+                result[i] = lhs[i] ^ rhs[i];
             }
-            return lhs;
+            return result;
         #endif
     }
 
@@ -534,10 +557,11 @@ namespace zephyr::math {
             a <<= b;
             return vector<N, T>(a);
         #else
+            vector<N, T> result;
             for (size_t i = 0; i < N; ++i) {
-                lhs[i] <<= rhs[i];
+                result[i] = lhs[i] << rhs[i];
             }
-            return lhs;
+            return result;
         #endif
     }
 
@@ -550,10 +574,11 @@ namespace zephyr::math {
             a >>= b;
             return vector<N, T>(a);
         #else
+            vector<N, T> result;
             for (size_t i = 0; i < N; ++i) {
-                lhs[i] >>= rhs[i];
+                result[i] = lhs[i] >> rhs[i];
             }
-            return lhs;
+            return result;
         #endif
     }
 

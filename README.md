@@ -1,3 +1,15 @@
+# Zephyr 0.10.0 - 27/11/2023
+
+### Added `zephyr::utils::lookAt`, Added `zephyr::math::normalize`
+
+* `zephyr::utils`
+
+    * New function `lookAt()` - Generate a lookAt matrix
+
+* `zephyr::math`
+
+    * New function `normalize()` - Normalize a vector
+
 # Zephyr 0.9.2 - 27/11/2023
 
 ### Tested on PS4 and Switch Pro Controllers

@@ -320,6 +320,12 @@ namespace zephyr::math {
             }
     };
 
+    template<size_t N, typename T>
+    requires std::is_arithmetic_v<T>
+    vector<N, T> normalize(const vector<N, T> &v) {
+        return v.unit();
+    }
+
 } // namespace zephyr::math
 
 #include "vector.inl"
