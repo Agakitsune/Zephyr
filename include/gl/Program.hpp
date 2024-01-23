@@ -10,16 +10,17 @@
 namespace zephyr::gl {
 
     class Program {
+        size_t *refCount;
         GLuint handle;
 
         public:
             Program();
-            Program(const Program&) = delete;
+            Program(const Program&);
             Program(Program&&) noexcept;
 
             ~Program();
 
-            Program& operator=(const Program&) = delete;
+            Program& operator=(const Program&);
             Program& operator=(Program&&) noexcept;
 
             void attach(const Shader& shader) const;

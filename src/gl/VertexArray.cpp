@@ -36,4 +36,8 @@ namespace zephyr::gl {
         glEnableVertexAttribArray(index);
     }
 
+    void disableVertexAttribArray(GLuint index) {
+        glDisableVertexAttribArray(index);
+    }
+
 } // namespace zephyr::gl

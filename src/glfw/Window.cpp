@@ -101,6 +101,10 @@ namespace zephyr::glfw {
         return glfwWindowShouldClose(handle);
     }
 
+    void Window::close() const {
+        glfwSetWindowShouldClose(handle, true);
+    }
+
     void Window::setTitle(const std::string &title) {
         glfwSetWindowTitle(handle, title.c_str());
     }

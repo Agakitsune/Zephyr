@@ -118,7 +118,7 @@ namespace zephyr::math {
             explicit constexpr vector(const vector<1, U> &x, const vector<1, V> &y, const vector<1, W> &z) : x(static_cast<T>(x.x)), y(static_cast<T>(y.x)), z(static_cast<T>(z.x)) {}
 
             template<typename U>
-            explicit constexpr vector(const vector<2, U> &xy, T z) : x(static_cast<T>(xy.x)), y(static_cast<T>(xy.y)), z(y) {}
+            explicit constexpr vector(const vector<2, U> &xy, T z) : x(static_cast<T>(xy.x)), y(static_cast<T>(xy.y)), z(z) {}
 
             template<typename U>
             explicit constexpr vector(T x, const vector<2, U> &yz) : x(x), y(static_cast<T>(y.x)), z(static_cast<T>(yz.y)) {}
@@ -164,6 +164,7 @@ namespace zephyr::math {
             // Unary Scalar Arithmetic operators
 
             template<typename U>
+            requires std::is_arithmetic_v<U>
             constexpr vector<3, T> &operator+=(U scalar) {
                 #ifdef ZEPHYR_EXPERIMENTAL
                     std::experimental::fixed_size_simd<U, 3> a([this](int i){ return static_cast<U>(this->data()[i]); });
@@ -179,6 +180,7 @@ namespace zephyr::math {
             }
 
             template<typename U>
+            requires std::is_arithmetic_v<U>
             constexpr vector<3, T> &operator-=(U scalar) {
                 #ifdef ZEPHYR_EXPERIMENTAL
                     std::experimental::fixed_size_simd<U, 3> a([this](int i){ return static_cast<U>(this->data()[i]); });
@@ -194,6 +196,7 @@ namespace zephyr::math {
             }
 
             template<typename U>
+            requires std::is_arithmetic_v<U>
             constexpr vector<3, T> &operator*=(U scalar) {
                 #ifdef ZEPHYR_EXPERIMENTAL
                     std::experimental::fixed_size_simd<U, 3> a([this](int i){ return static_cast<U>(this->data()[i]); });
@@ -209,6 +212,7 @@ namespace zephyr::math {
             }
 
             template<typename U>
+            requires std::is_arithmetic_v<U>
             constexpr vector<3, T> &operator/=(U scalar) {
                 #ifdef ZEPHYR_EXPERIMENTAL
                     std::experimental::fixed_size_simd<U, 3> a([this](int i){ return static_cast<U>(this->data()[i]); });

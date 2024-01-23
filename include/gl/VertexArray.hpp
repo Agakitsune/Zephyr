@@ -23,5 +23,6 @@ namespace zephyr::gl {
     };
 
     void vertexAttribPointer(GLuint index, GLint n, VertexAttributeType type, bool normal, GLsizei stride, GLint offset);
+    void disableVertexAttribArray(GLuint index);
     
 } // namespace dunes

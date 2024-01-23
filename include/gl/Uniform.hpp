@@ -20,6 +20,8 @@ namespace zephyr::gl {
             Uniform& operator=(const Uniform&);
             Uniform& operator=(Uniform&&) noexcept;
 
+            bool isValid() const;
+
             void set(GLfloat v0) const;
             void set(GLfloat v0, GLfloat v1) const;
             void set(GLfloat v0, GLfloat v1, GLfloat v2) const;

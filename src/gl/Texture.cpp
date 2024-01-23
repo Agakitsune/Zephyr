@@ -5,22 +5,44 @@ namespace zephyr::gl {
 
     Texture::Texture() {
         glGenTextures(1, &handle);
+        refCount = new size_t(1);
+    }
+
+    Texture::Texture(const Texture &other) {
+        handle = other.handle;
+        refCount = other.refCount;
+        target = other.target;
+        (*refCount)++;
     }
 
     Texture::Texture(Texture &&other) {
         handle = other.handle;
+        refCount = other.refCount;
+        target = other.target;
         other.handle = 0;
+        other.refCount = nullptr;
     }
 
     Texture::~Texture() {
-        if (handle != 0) {
+        if (handle != 0 && (!refCount || --(*refCount) == 0)) {
             glDeleteTextures(1, &handle);
         }
     }
 
+    Texture &Texture::operator=(const Texture &other) {
+        handle = other.handle;
+        refCount = other.refCount;
+        target = other.target;
+        (*refCount)++;
+        return *this;
+    }
+
     Texture &Texture::operator=(Texture &&other) {
         handle = other.handle;
+        refCount = other.refCount;
+        target = other.target;
         other.handle = 0;
+        other.refCount = nullptr;
         return *this;
     }
 
@@ -144,6 +166,14 @@ namespace zephyr::gl {
 
     void Texture::generateMipmap(gl::TextureTarget target) {
         glGenerateMipmap(static_cast<GLenum>(target));
+    }
+
+    math::vec2u Texture::size() const {
+        GLint width, height;
+        glBindTexture(static_cast<GLenum>(target), handle);
+        glGetTexLevelParameteriv(static_cast<GLenum>(target), 0, GL_TEXTURE_WIDTH, &width);
+        glGetTexLevelParameteriv(static_cast<GLenum>(target), 0, GL_TEXTURE_HEIGHT, &height);
+        return math::vec2u(width, height);
     }
 
 }

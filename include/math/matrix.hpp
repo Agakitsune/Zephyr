@@ -6,6 +6,7 @@
 #include <ostream>
 
 #include "vector.hpp"
+#include "angle.hpp"
 
 namespace zephyr::math {
 
@@ -318,15 +319,11 @@ namespace zephyr::math {
 
     template<size_t M, size_t N, size_t P, typename T, typename U>
     constexpr matrix<M, P, T> operator*(const matrix<M, N, T> &lhs, const matrix<N, P, U> &rhs) {
-        // std::cout << lhs << std::endl;
-        // std::cout << rhs << std::endl;
         matrix<M, P, T> temp;
         for (size_t i = 0; i < M; ++i) {
             for (size_t j = 0; j < P; ++j) {
-                // std::cout << "Calculating for " << i << "x" << j << std::endl;
                 temp[i][j] = 0;
                 for (size_t k = 0; k < N; ++k) {
-                    // std::cout << "Adding " << lhs[i][k] << " * " << rhs[k][j] << std::endl;
                     temp[i][j] += lhs[i][k] * rhs[k][j];
                 }
             }
@@ -406,16 +403,16 @@ namespace zephyr::math {
     template<typename T>
     matrix<4, 4, T> translate(const matrix<4, 4, T> &mat, const vector<3, T> &vec) {
         matrix<4, 4, T> temp = mat;
-        temp[0][3] = (temp[0][0] + temp[0][3]) * vec.x;
-        temp[1][3] = (temp[1][1] + temp[1][3]) * vec.y;
-        temp[2][3] = (temp[2][2] + temp[2][3]) * vec.z;
+        temp[0][3] = temp[0][3] + vec.x;
+        temp[1][3] = temp[1][3] + vec.y;
+        temp[2][3] = temp[2][3] + vec.z;
         return temp;
     }
 
     template<typename T>
     matrix<4, 4, T> rotationX(const matrix<4, 4, T> &mat, T angle) {
-        const T c = std::cos(angle);
-        const T s = std::sin(angle);
+        const T c = std::cos(toRadians(angle));
+        const T s = std::sin(toRadians(angle));
 
         matrix<4, 4, T> temp = mat;
 
@@ -436,8 +433,8 @@ namespace zephyr::math {
 
     template<typename T>
     matrix<4, 4, T> rotationY(const matrix<4, 4, T> &mat, T angle) {
-        const T c = std::cos(angle);
-        const T s = std::sin(angle);
+        const T c = std::cos(toRadians(angle));
+        const T s = std::sin(toRadians(angle));
 
         matrix<4, 4, T> temp = mat;
 
@@ -458,52 +455,52 @@ namespace zephyr::math {
 
     template<typename T>
     matrix<4, 4, T> rotationZ(const matrix<4, 4, T> &mat, T angle) {
-        const T c = std::cos(angle);
-        const T s = std::sin(angle);
+        const T c = std::cos(toRadians(angle));
+        const T s = std::sin(toRadians(angle));
 
         matrix<4, 4, T> temp = mat;
 
-        temp[0][0] = c * mat[0][0] + s * mat[0][1];
-        temp[0][1] = -s * mat[0][0] + c * mat[0][1];
+        temp[0][0] = c * mat[0][0] + -s * mat[0][1];
+        temp[0][1] = s * mat[0][0] + c * mat[0][1];
 
-        temp[1][0] = c * mat[1][0] + s * mat[1][1];
-        temp[1][1] = -s * mat[1][0] + c * mat[1][1];
+        temp[1][0] = c * mat[1][0] + -s * mat[1][1];
+        temp[1][1] = s * mat[1][0] + c * mat[1][1];
 
-        temp[2][0] = c * mat[2][0] + s * mat[2][1];
-        temp[2][1] = -s * mat[2][0] + c * mat[2][1];
+        temp[2][0] = c * mat[2][0] + -s * mat[2][1];
+        temp[2][1] = s * mat[2][0] + c * mat[2][1];
 
-        temp[3][0] = c * mat[3][0] + s * mat[3][1];
-        temp[3][1] = -s * mat[3][0] + c * mat[3][1];
+        temp[3][0] = c * mat[3][0] + -s * mat[3][1];
+        temp[3][1] = s * mat[3][0] + c * mat[3][1];
 
         return temp;
     }
 
     template<typename T>
     matrix<4, 4, T> rotation(const matrix<4, 4, T> &mat, const vector<3, T> &angles) {
-        const T cX = std::cos(angles.x);
-        const T cY = std::cos(angles.y);
-        const T cZ = std::cos(angles.z);
-        const T sX = std::sin(angles.x);
-        const T sY = std::sin(angles.y);
-        const T sZ = std::sin(angles.z);
+        const T cX = std::cos(toRadians(angles.x));
+        const T cY = std::cos(toRadians(angles.y));
+        const T cZ = std::cos(toRadians(angles.z));
+        const T sX = std::sin(toRadians(angles.x));
+        const T sY = std::sin(toRadians(angles.y));
+        const T sZ = std::sin(toRadians(angles.z));
 
         matrix<4, 4, T> temp = mat;
 
-        temp[0][0] = cY * cZ * mat[0][0] + (sX * sY * cZ - cX * sZ) * mat[0][1] + (cX * sY * cZ + sX * sZ) * mat[0][2];
-        temp[0][1] = cY * sZ * mat[0][0] + (sX * sY * sZ + cX * cZ) * mat[0][1] + (cX * sY * sZ - sX * cZ) * mat[0][2];
-        temp[0][2] = -sY * mat[0][0] + sX * cY * mat[0][1] + cX * cY * mat[0][2];
+        temp[0][0] = cY * cZ * mat[0][0] + (sX * sY * cZ - cX * sZ) * mat[1][0] + (cX * sY * cZ + sX * sZ) * mat[2][0];
+        temp[1][0] = cY * sZ * mat[0][0] + (sX * sY * sZ + cX * cZ) * mat[1][0] + (cX * sY * sZ - sX * cZ) * mat[2][0];
+        temp[2][0] = -sY * mat[0][0] + sX * cY * mat[1][0] + cX * cY * mat[2][0];
 
-        temp[1][0] = cY * cZ * mat[1][0] + (sX * sY * cZ - cX * sZ) * mat[1][1] + (cX * sY * cZ + sX * sZ) * mat[1][2];
-        temp[1][1] = cY * sZ * mat[1][0] + (sX * sY * sZ + cX * cZ) * mat[1][1] + (cX * sY * sZ - sX * cZ) * mat[1][2];
-        temp[1][2] = -sY * mat[1][0] + sX * cY * mat[1][1] + cX * cY * mat[1][2];
+        temp[0][1] = cY * cZ * mat[0][1] + (sX * sY * cZ - cX * sZ) * mat[1][1] + (cX * sY * cZ + sX * sZ) * mat[2][1];
+        temp[1][1] = cY * sZ * mat[0][1] + (sX * sY * sZ + cX * cZ) * mat[1][1] + (cX * sY * sZ - sX * cZ) * mat[2][1];
+        temp[2][1] = -sY * mat[0][1] + sX * cY * mat[1][1] + cX * cY * mat[2][1];
 
-        temp[2][0] = cY * cZ * mat[2][0] + (sX * sY * cZ - cX * sZ) * mat[2][1] + (cX * sY * cZ + sX * sZ) * mat[2][2];
-        temp[2][1] = cY * sZ * mat[2][0] + (sX * sY * sZ + cX * cZ) * mat[2][1] + (cX * sY * sZ - sX * cZ) * mat[2][2];
-        temp[2][2] = -sY * mat[2][0] + sX * cY * mat[2][1] + cX * cY * mat[2][2];
+        temp[0][2] = cY * cZ * mat[0][2] + (sX * sY * cZ - cX * sZ) * mat[1][2] + (cX * sY * cZ + sX * sZ) * mat[2][2];
+        temp[1][2] = cY * sZ * mat[0][2] + (sX * sY * sZ + cX * cZ) * mat[1][2] + (cX * sY * sZ - sX * cZ) * mat[2][2];
+        temp[2][2] = -sY * mat[0][2] + sX * cY * mat[1][2] + cX * cY * mat[2][2];
 
-        temp[3][0] = cY * cZ * mat[3][0] + (sX * sY * cZ - cX * sZ) * mat[3][1] + (cX * sY * cZ + sX * sZ) * mat[3][2];
-        temp[3][1] = cY * sZ * mat[3][0] + (sX * sY * sZ + cX * cZ) * mat[3][1] + (cX * sY * sZ - sX * cZ) * mat[3][2];
-        temp[3][2] = -sY * mat[3][0] + sX * cY * mat[3][1] + cX * cY * mat[3][2];
+        temp[0][3] = cY * cZ * mat[0][3] + (sX * sY * cZ - cX * sZ) * mat[1][3] + (cX * sY * cZ + sX * sZ) * mat[2][3];
+        temp[1][3] = cY * sZ * mat[0][3] + (sX * sY * sZ + cX * cZ) * mat[1][3] + (cX * sY * sZ - sX * cZ) * mat[2][3];
+        temp[2][3] = -sY * mat[0][3] + sX * cY * mat[1][3] + cX * cY * mat[3][2];
 
         return temp;
     }

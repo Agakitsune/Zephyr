@@ -1,3 +1,60 @@
+# Zephyr
+
+Zephyr is a powerful C++ game engine.
+It is designed to be simple and easy to use for beginners and allow advanced users to have full control over the engine.
+
+# Zephyr 0.11.0 - 23/01/2024
+
+### Added `zephyr::graphics`
+
+* `zephyr::graphics`
+
+    * New type `color`
+
+    * New type `Drawable`
+
+    * New type `Projector`
+
+    * New type `Sprite`
+
+    * New type `Texture`
+
+    * New type `Transformable`
+
+    * New type `Window`
+
+    * New pipeline `SpritePipeline`
+
+    * New projector `OrthographicProjector`
+
+* `zephyr::math`
+
+    * New function `toRadians()`
+
+    * New function `toDegrees()`
+
+* `zephyr::gl`
+
+    * Added copy constructor and copy assignment to `Buffer`
+
+    * Added copy constructor and copy assignment to `Program`
+
+    * Added copy constructor and copy assignment to `Texture`
+
+    * New method `isValid()` in `Uniform`
+
+    * New function `disableVertexAttribArray()` in `VertexArray`
+
+* `zephyr::glfw`
+
+    * New method `close()` in `Window`
+
+* `zephyr::utils`
+
+    * New type `Chunk`
+
+    * New function `disableAll()` - Disable all vertex attrib arrays
+
 # Zephyr 0.10.0 - 27/11/2023
 
 ### Added `zephyr::utils::lookAt`, Added `zephyr::math::normalize`

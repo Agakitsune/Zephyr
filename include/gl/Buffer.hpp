@@ -4,11 +4,13 @@
 #include "Utils.hpp"
 #include "Type.hpp"
 
+#include "utils/Chunk.hpp"
+
 namespace zephyr::gl {
     
     class Buffer {
         GLuint handle;
-        BufferTarget target;
+        BufferTarget _target;
 
         public:
             Buffer();
@@ -21,6 +23,7 @@ namespace zephyr::gl {
             Buffer& operator=(Buffer&&) noexcept;
 
             void bind(BufferTarget target);
+            void target(BufferTarget target);
 
             void data(const void* data, size_t size, BufferUsage usage) const;
 
@@ -35,6 +38,12 @@ namespace zephyr::gl {
             void subData(const T data[N], size_t offset) const {
                 subData(data, sizeof(T) * N, offset);
             }
+
+            utils::Chunk getData() const;
+            utils::Chunk getSubData(size_t size, size_t offset) const;
+
+            size_t size() const;
+            BufferUsage usage() const;
 
             static void data(BufferTarget target, const void* data, size_t size, BufferUsage usage);
 

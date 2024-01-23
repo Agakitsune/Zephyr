@@ -22,6 +22,10 @@ namespace zephyr::gl {
         return *this;
     }
 
+    bool Uniform::isValid() const {
+        return location != -1;
+    }
+
     void Uniform::set(GLfloat v0) const {
         glUniform1f(location, v0);
     }

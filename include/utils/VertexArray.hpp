@@ -97,4 +97,10 @@ namespace zephyr::utils {
         ), ...);
     }
 
+    void disableAll() {
+        for (GLuint i = 0; i < 16; i++) {
+            gl::disableVertexAttribArray(i);
+        }
+    }
+
 } // namespace zephyr::utils

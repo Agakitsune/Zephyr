@@ -100,6 +100,7 @@ namespace zephyr::glfw {
             Window &operator=(Window &&other) noexcept;
 
             bool shouldClose() const;
+            void close() const;
             
             void setTitle(const std::string &title);
             void setTitle(std::string &&title);

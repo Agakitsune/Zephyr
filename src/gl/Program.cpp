@@ -5,20 +5,40 @@ namespace zephyr::gl {
     
     Program::Program() {
         handle = glCreateProgram();
+        refCount = new size_t(1);
+    }
+
+    Program::Program(const Program& other) {
+        handle = other.handle;
+        refCount = other.refCount;
+        (*refCount)++;
     }
 
     Program::Program(Program&& other) noexcept {
         handle = other.handle;
+        refCount = other.refCount;
         other.handle = 0;
+        other.refCount = nullptr;
     }
 
     Program::~Program() {
-        glDeleteProgram(handle);
+        if (handle != 0 && (!refCount || --(*refCount) == 0)) {
+            glDeleteProgram(handle);
+        }
+    }
+
+    Program& Program::operator=(const Program& other) {
+        handle = other.handle;
+        refCount = other.refCount;
+        (*refCount)++;
+        return *this;
     }
 
     Program& Program::operator=(Program&& other) noexcept {
         handle = other.handle;
+        refCount = other.refCount;
         other.handle = 0;
+        other.refCount = nullptr;
         return *this;
     }
 

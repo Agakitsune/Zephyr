@@ -10,17 +10,18 @@
 namespace zephyr::gl {
 
     class Texture {
+        size_t *refCount;
         GLuint handle;
         TextureTarget target;
 
         public:
             Texture();
-            Texture(const Texture &other) = delete;
+            Texture(const Texture &other);
             Texture(Texture &&other);
 
             ~Texture();
 
-            Texture &operator=(const Texture &other) = delete;
+            Texture &operator=(const Texture &other);
             Texture &operator=(Texture &&other);
 
             void bind(gl::TextureTarget target);
@@ -63,7 +64,7 @@ namespace zephyr::gl {
 
             static void generateMipmap(gl::TextureTarget target);
 
-            
+            math::vec2u size() const;
     };
 
 }
