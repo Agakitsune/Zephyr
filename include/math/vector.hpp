@@ -5,13 +5,11 @@
 #include <cstring>
 #include <stdexcept>
 #include <type_traits>
+#include <cmath>
 
 #ifdef ZEPHYR_EXPERIMENTAL
     #include <experimental/simd>
 #endif
-
-#include <cmath>
-#include <cstring>
 
 #include "vectormeta.hpp"
 

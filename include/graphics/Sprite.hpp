@@ -10,6 +10,8 @@
 #include "graphics/Texture.hpp"
 #include "graphics/Drawable.hpp"
 
+#include "math/rect.hpp"
+
 namespace zephyr::graphics {
 
     class Sprite : public Transformable, public Drawable {

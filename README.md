@@ -3,6 +3,84 @@
 Zephyr is a powerful C++ game engine.
 It is designed to be simple and easy to use for beginners and allow advanced users to have full control over the engine.
 
+# Zephyr 0.12.0 - 19/02/2024
+
+### Added Animation
+
+* `zephyr::animation`
+
+    * New type `Interpolation`
+
+* `zephyr::animation::easing`
+
+    * New function `linear()`
+
+    * New function `quadraticIn()`
+
+    * New function `quadraticOut()`
+
+    * New function `quadraticInOut()`
+
+    * New function `cubicIn()`
+
+    * New function `cubicOut()`
+
+    * New function `cubicInOut()`
+
+    * New function `quarticIn()`
+
+    * New function `quarticOut()`
+
+    * New function `quarticInOut()`
+
+    * New function `quinticIn()`
+
+    * New function `quinticOut()`
+
+    * New function `quinticInOut()`
+
+    * New function `sineIn()`
+
+    * New function `sineOut()`
+
+    * New function `sineInOut()`
+
+    * New function `circularIn()`
+
+    * New function `circularOut()`
+
+    * New function `circularInOut()`
+
+    * New function `exponentialIn()`
+
+    * New function `exponentialOut()`
+
+    * New function `exponentialInOut()`
+
+    * New function `elasticIn()`
+
+    * New function `elasticOut()`
+
+    * New function `elasticInOut()`
+
+    * New function `backIn()`
+
+    * New function `backOut()`
+
+    * New function `backInOut()`
+
+    * New function `bounceIn()`
+
+    * New function `bounceOut()`
+
+    * New function `bounceInOut()`
+
+* `zephyr::math`
+
+    * New type `rect`
+
+    > *Experimental: `rect` is not fully implemented yet*
+
 # Zephyr 0.11.0 - 23/01/2024
 
 ### Added `zephyr::graphics`

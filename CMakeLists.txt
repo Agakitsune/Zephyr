@@ -22,6 +22,8 @@ endif()
 file(GLOB SOURCE
     ${PROJECT_SOURCE_DIR}/src/__head.cpp
 
+    ${PROJECT_SOURCE_DIR}/src/animation/easing/*.cpp
+    ${PROJECT_SOURCE_DIR}/src/animation/easing/function/*.cpp
     ${PROJECT_SOURCE_DIR}/src/gl/*.cpp
     ${PROJECT_SOURCE_DIR}/src/glfw/*.cpp
     ${PROJECT_SOURCE_DIR}/src/graphics/*.cpp
