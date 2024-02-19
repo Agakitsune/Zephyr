@@ -23,7 +23,8 @@
 #include "input/Keyboard.hpp"
 
 #include "graphics/Window.hpp"
-#include "graphics/Sprite.hpp"
+#include "graphics/sprite/StaticSprite.hpp"
+#include "graphics/sprite/DynamicSprite.hpp"
 #include "graphics/projector/OrthographicProjector.hpp"
 #include "graphics/pipeline/SpritePipeline.hpp"
 #include "animation/easing/Interpolation.hpp"
@@ -37,7 +38,7 @@
 int main(void) {
     // zephyr::::Window window(800, 600, "WindowTest");
     zephyr::graphics::Window window(800, 600, "WindowTest");
-    zephyr::graphics::Sprite sprite("../poyo.png");
+    zephyr::graphics::StaticSprite sprite("../poyo.png");
     zephyr::graphics::OrthographicProjector projector(800, 600);
     zephyr::graphics::SpritePipeline pipeline("../shader.vs", "../shader.fs");
     zephyr::animation::Interpolation<zephyr::math::vec2f> interpolation;
@@ -46,8 +47,9 @@ int main(void) {
     window.useProjector(projector);
 
     sprite.scale(16, 16);
+    sprite.scissor(3, 3, 12, 12);
 
-    interpolation.interpolate(zephyr::animation::easing::bounceOut, zephyr::math::vec2f(0,0), zephyr::math::vec2f(100,100), 128);
+    interpolation.interpolate(zephyr::animation::easing::bounceOut, zephyr::math::vec2f(0,0), zephyr::math::vec2f(200,200), 256);
 
     while (window.isOpen()) {
         window.clear(zephyr::graphics::spring_green);

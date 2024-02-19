@@ -95,6 +95,30 @@ namespace zephyr::math {
             vector<2, T> getBottomRight() const {
                 return position + size;
             }
-    };
+
+            T getLeft() const {
+                return position.x;
+            }
+
+            T getRight() const {
+                return position.x + size.x;
+            }
+
+            T getTop() const {
+                return position.y;
+            }
+
+            T getBottom() const {
+                return position.y + size.y;
+            }
+
+            T getHeight() const {
+                return size.y;
+            }
+
+            T getWidth() const {
+                return size.x;
+            }
+        };
 
 }

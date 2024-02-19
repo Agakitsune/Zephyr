@@ -3,6 +3,22 @@
 Zephyr is a powerful C++ game engine.
 It is designed to be simple and easy to use for beginners and allow advanced users to have full control over the engine.
 
+# Zephyr 0.13.0 - 19/02/2024
+
+### Added scissor on sprite
+
+* `zephyr::graphics`
+
+    * New type `StaticSprite`
+
+    * New type `DynamicSprite`
+
+    * New type `StreamSprite`
+
+    * Remove type `Sprite`
+
+    * New method `scissor()` to sprites
+
 # Zephyr 0.12.0 - 19/02/2024
 
 ### Added Animation

@@ -14,26 +14,32 @@
 
 namespace zephyr::graphics {
 
-    class Sprite : public Transformable, public Drawable {
+    class BaseSprite : public Transformable, public Drawable {
         Texture _texture;
         gl::VertexArray _array;
         gl::Buffer _buffer;
 
+        virtual inline gl::BufferUsage usage() const {
+            return gl::BufferUsage::StaticDraw;
+        }
+
         void setupBuffer();
+        void setupBuffer(const zephyr::math::rect<int> &rect);
+        void setupBuffer(const zephyr::math::rect<int> &rect, const zephyr::math::vec2u &textureSize);
 
         public:
-            Sprite(const Sprite &other);
-            Sprite(Sprite &&other) noexcept;
-            Sprite(const Texture &texture);
-            Sprite(Texture &&texture);
-            Sprite(const char *path);
-            Sprite(const std::string &path);
-            Sprite(const std::filesystem::path &path);
+            BaseSprite(const BaseSprite &other);
+            BaseSprite(BaseSprite &&other) noexcept;
+            BaseSprite(const Texture &texture);
+            BaseSprite(Texture &&texture);
+            BaseSprite(const char *path);
+            BaseSprite(const std::string &path);
+            BaseSprite(const std::filesystem::path &path);
 
-            ~Sprite();
+            virtual ~BaseSprite() = 0;
 
-            Sprite &operator=(const Sprite &other);
-            Sprite &operator=(Sprite &&other) noexcept;
+            BaseSprite &operator=(const BaseSprite &other);
+            BaseSprite &operator=(BaseSprite &&other) noexcept;
 
             void setPosition(const float x, const float y);
             void setPosition(const math::vec2f &position);
@@ -54,6 +60,10 @@ namespace zephyr::graphics {
             void setTexture(const char *path);
             void setTexture(const std::string &path);
             void setTexture(const std::filesystem::path &path);
+
+            void scissor(const int x, const int y, const int width, const int height);
+            void scissor(const zephyr::math::vec2i &position, const zephyr::math::vec2i &size);
+            void scissor(const zephyr::math::rect<int> &rect);
 
             math::vec2f getPosition() const;
             math::vec2f getScale() const;
