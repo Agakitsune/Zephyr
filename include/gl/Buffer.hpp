@@ -23,6 +23,7 @@ namespace zephyr::gl {
             Buffer& operator=(Buffer&&) noexcept;
 
             void bind(BufferTarget target);
+            void bindVertex(unsigned int index, size_t offset, size_t stride) const;
             void target(BufferTarget target);
 
             void data(const void* data, size_t size, BufferUsage usage) const;

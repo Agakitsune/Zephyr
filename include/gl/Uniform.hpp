@@ -37,9 +37,9 @@ namespace zephyr::gl {
             void set(GLuint v0, GLuint v1, GLuint v2) const;
             void set(GLuint v0, GLuint v1, GLuint v2, GLuint v3) const;
 
-            void set(GLsizei count, GLfloat *value) const;
-            void set(GLsizei count, GLint *value) const;
-            void set(GLsizei count, GLuint *value) const;
+            void set(GLsizei count, const GLfloat *value) const;
+            void set(GLsizei count, const GLint *value) const;
+            void set(GLsizei count, const GLuint *value) const;
 
             template<size_t N, typename T>
             requires std::is_integral_v<T> && std::is_signed_v<T>
@@ -59,17 +59,17 @@ namespace zephyr::gl {
                 set(N, vector.data());
             }
 
-            void set2x2(GLsizei count, GLboolean transpose, GLfloat *value) const;
-            void set3x3(GLsizei count, GLboolean transpose, GLfloat *value) const;
-            void set4x4(GLsizei count, GLboolean transpose, GLfloat *value) const;
+            void set2x2(GLsizei count, GLboolean transpose, const GLfloat *value) const;
+            void set3x3(GLsizei count, GLboolean transpose, const GLfloat *value) const;
+            void set4x4(GLsizei count, GLboolean transpose, const GLfloat *value) const;
 
-            void set2x3(GLsizei count, GLboolean transpose, GLfloat *value) const;
-            void set3x2(GLsizei count, GLboolean transpose, GLfloat *value) const;
+            void set2x3(GLsizei count, GLboolean transpose, const GLfloat *value) const;
+            void set3x2(GLsizei count, GLboolean transpose, const GLfloat *value) const;
 
-            void set2x4(GLsizei count, GLboolean transpose, GLfloat *value) const;
-            void set4x2(GLsizei count, GLboolean transpose, GLfloat *value) const;
-            void set3x4(GLsizei count, GLboolean transpose, GLfloat *value) const;
-            void set4x3(GLsizei count, GLboolean transpose, GLfloat *value) const;
+            void set2x4(GLsizei count, GLboolean transpose, const GLfloat *value) const;
+            void set4x2(GLsizei count, GLboolean transpose, const GLfloat *value) const;
+            void set3x4(GLsizei count, GLboolean transpose, const GLfloat *value) const;
+            void set4x3(GLsizei count, GLboolean transpose, const GLfloat *value) const;
     };
 
 } // namespace zephyr::gl

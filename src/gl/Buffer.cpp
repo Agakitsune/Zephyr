@@ -27,6 +27,10 @@ namespace zephyr::gl {
         this->_target = target;
     }
 
+    void Buffer::bindVertex(unsigned int index, size_t offset, size_t stride) const {
+        glBindVertexBuffer(index, handle, offset, stride);
+    }
+
     void Buffer::target(BufferTarget target) {
         this->_target = target;
     }

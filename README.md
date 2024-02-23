@@ -3,6 +3,69 @@
 Zephyr is a powerful C++ game engine.
 It is designed to be simple and easy to use for beginners and allow advanced users to have full control over the engine.
 
+# Zephyr 0.14.0 - 23/02/2024
+
+### Added Text rendering, Registry, Core and `resources` directory, upgrade rendering pipeline
+
+* `zephyr::graphics`
+
+    * New type `Font`
+
+    * New type `Text`
+
+    * New type `Image`
+
+    * New type `Colorable`
+
+* `zephyr::color::minecraft`
+
+    * New color `dark_blue`
+    
+    * New color `dark_green`
+    
+    * New color `dark_aqua`
+    
+    * New color `dark_red`
+    
+    * New color `dark_purple`
+    
+    * New color `gold`
+    
+    * New color `gray`
+    
+    * New color `dark_gray`
+    
+    * New color `blue`
+    
+    * New color `green`
+    
+    * New color `aqua`
+    
+    * New color `red`
+    
+    * New color `light_purple`
+    
+    * New color `yellow`
+
+* `zephyr::registry`
+
+    * New type `Registry`
+
+    * New type `RegistryKey`
+
+* `zephyr::utils`
+
+    * New type `VertexData`
+
+* `zephyr`
+
+    * New type `Core`
+
+Updated the Pipeline to use `glVertexAttribFormat` instead of `glVertexAttribPointer`, the Pipeline now store the VAO instead of the Drawable,
+allowing to store the format in the VAO on construction and just bind the VAO and the Buffer to draw when needed.
+
+Added the `/resources` directory, allowing to store resources like fonts, pipelines, shaders, textures, etc.
+
 # Zephyr 0.13.0 - 19/02/2024
 
 ### Added scissor on sprite

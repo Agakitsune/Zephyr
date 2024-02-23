@@ -1,18 +1,24 @@
 
 #pragma once
 
+#include "gl/VertexArray.hpp"
+
 #include "graphics/Pipeline.hpp"
-#include "utils/VertexArray.hpp"
 
 namespace zephyr::graphics {
 
     class SpritePipeline : public Pipeline {
-        public:
-            using Pipeline::Pipeline;
-            virtual ~SpritePipeline() override = default;
 
-            virtual void setup() const override;
-            virtual void reset() const override;
+        public:
+            SpritePipeline(const std::string &file);
+            SpritePipeline(const std::filesystem::path &file);
+            SpritePipeline(const std::string &vertexPath, const std::string &fragmentPath);
+            SpritePipeline(const std::string &vertexPath, const std::string &geometryPath, const std::string &fragmentPath);
+            SpritePipeline(const gl::Program &program);
+            SpritePipeline(gl::Program &&program);
+            SpritePipeline(const SpritePipeline &other) = default;
+            SpritePipeline(SpritePipeline &&other) noexcept = default;
+            virtual ~SpritePipeline() override = default;
     };
 
 }

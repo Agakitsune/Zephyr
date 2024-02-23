@@ -24,12 +24,15 @@ file(GLOB SOURCE
 
     ${PROJECT_SOURCE_DIR}/src/animation/easing/*.cpp
     ${PROJECT_SOURCE_DIR}/src/animation/easing/function/*.cpp
+    ${PROJECT_SOURCE_DIR}/src/core/*.cpp
     ${PROJECT_SOURCE_DIR}/src/gl/*.cpp
     ${PROJECT_SOURCE_DIR}/src/glfw/*.cpp
     ${PROJECT_SOURCE_DIR}/src/graphics/*.cpp
+    ${PROJECT_SOURCE_DIR}/src/graphics/font/*.cpp
     ${PROJECT_SOURCE_DIR}/src/graphics/pipeline/*.cpp
     ${PROJECT_SOURCE_DIR}/src/graphics/projector/*.cpp
     ${PROJECT_SOURCE_DIR}/src/graphics/sprite/*.cpp
+    ${PROJECT_SOURCE_DIR}/src/registry/*.cpp
     ${PROJECT_SOURCE_DIR}/src/utils/*.cpp
 )
 

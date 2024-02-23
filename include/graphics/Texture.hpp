@@ -13,6 +13,8 @@ namespace zephyr::graphics {
 
         public:
             Texture();
+            Texture(const gl::Texture &tex);
+            Texture(gl::Texture &&tex);
             Texture(const Texture &other);
             Texture(Texture &&other);
             Texture(const char *path);

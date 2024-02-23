@@ -2,8 +2,10 @@
 #pragma once
 
 #include <type_traits>
+#include <vector>
 
 #include "gl/VertexArray.hpp"
+
 #include "math/math.hpp"
 
 namespace zephyr::utils {
@@ -85,14 +87,16 @@ namespace zephyr::utils {
         };
 
     } // namespace __private
-    
+
 
     template<typename... T>
     void useVertex(GLuint index) {
-        constexpr size_t stride = (0 + ... + __private::vertexAttribute<T>::size);
+        // constexpr size_t stride = (0 + ... + __private::vertexAttribute<T>::size);
         size_t offset = 0;
         ((
-            gl::vertexAttribPointer(index++, __private::vertexAttribute<T>::n, __private::vertexAttribute<T>::type, __private::vertexAttribute<T>::normal, stride, offset),
+            glVertexAttribBinding(index, 0),
+            gl::vertexFormat(index++, __private::vertexAttribute<T>::n, __private::vertexAttribute<T>::type, __private::vertexAttribute<T>::normal, offset),
+            // gl::vertexAttribPointer(index++, __private::vertexAttribute<T>::n, __private::vertexAttribute<T>::type, __private::vertexAttribute<T>::normal, stride, offset),
             offset += __private::vertexAttribute<T>::size
         ), ...);
     }

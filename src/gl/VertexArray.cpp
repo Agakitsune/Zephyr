@@ -31,6 +31,11 @@ namespace zephyr::gl {
         glBindVertexArray(handle);
     }
 
+    void vertexFormat(GLuint index, GLint n, VertexAttributeType type, bool normal, GLuint offset) {
+        glVertexAttribFormat(index, n, static_cast<GLenum>(type), normal, offset);
+        glEnableVertexAttribArray(index);
+    }
+
     void vertexAttribPointer(GLuint index, GLint n, VertexAttributeType type, bool normal, GLsizei stride, GLint offset) {
         glVertexAttribPointer(index, n, static_cast<GLenum>(type), normal, stride, reinterpret_cast<const void*>(offset));
         glEnableVertexAttribArray(index);

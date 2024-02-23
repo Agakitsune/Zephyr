@@ -7,6 +7,25 @@ namespace zephyr::graphics {
 
     using color = math::vec4uc;
 
+    namespace minecraft {
+
+        static constexpr color dark_blue = math::vec4uc(0, 0, 170, 255);
+        static constexpr color dark_green = math::vec4uc(0, 170, 0, 255);
+        static constexpr color dark_aqua = math::vec4uc(0, 170, 170, 255);
+        static constexpr color dark_red = math::vec4uc(170, 0, 0, 255);
+        static constexpr color dark_purple = math::vec4uc(170, 0, 170, 255);
+        static constexpr color gold = math::vec4uc(255, 170, 0, 255);
+        static constexpr color gray = math::vec4uc(170, 170, 170, 255);
+        static constexpr color dark_gray = math::vec4uc(85, 85, 85, 255);
+        static constexpr color blue = math::vec4uc(85, 85, 255, 255);
+        static constexpr color green = math::vec4uc(85, 255, 85, 255);
+        static constexpr color aqua = math::vec4uc(85, 255, 255, 255);
+        static constexpr color red = math::vec4uc(255, 85, 85, 255);
+        static constexpr color light_purple = math::vec4uc(255, 85, 255, 255);
+        static constexpr color yellow = math::vec4uc(255, 255, 85, 255);
+
+    }
+
     static constexpr color black = math::vec4uc(0, 0, 0, 255);
     static constexpr color white = math::vec4uc(255, 255, 255, 255);
 

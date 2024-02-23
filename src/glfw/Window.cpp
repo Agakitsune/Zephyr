@@ -4,8 +4,15 @@
 namespace zephyr::glfw {
     
     void Window::init() {
-        if (!_init)
-            glfwInit();
+        if (!_init) {
+            if (glfwInit()) {
+                glfwSetErrorCallback([](int error, const char *description) {
+                    throw std::runtime_error("GLFW Error: " + std::to_string(error) + " - " + description);
+                });
+            } else {
+                throw std::runtime_error("Could not initialize GLFW");
+            }
+        }
         _init = true;
     }
 
@@ -58,26 +65,14 @@ namespace zephyr::glfw {
         glfwTerminate();
     }
 
+    Window::Window() : Window(800, 600, "WindowTest") {}
+
     Window::Window(int width, int height, const std::string &title) : Window(width, height, title.c_str()) {}
 
     Window::Window(int width, int height, std::string &&title) : Window(width, height, title) {}
 
     Window::Window(int width, int height, const char *title) {
-        init();
-        if (defaultHints) {
-            glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-            glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-            glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        }
-        handle = glfwCreateWindow(width, height, title, nullptr, nullptr);
-        defaultHints = true;
-
-        glfwMakeContextCurrent(handle);
-
-        glfwSetFramebufferSizeCallback(handle, &resizeCallback);
-        glfwSetScrollCallback(handle, &scrollCallback);
-
-        glewInit();
+        create(width, height, title);
     }
 
     Window::Window(Window &&other) noexcept {
@@ -97,12 +92,46 @@ namespace zephyr::glfw {
         return *this;
     }
 
+    void Window::create(int width, int height, const std::string &title) {
+        create(width, height, title.c_str());
+    }
+
+    void Window::create(int width, int height, std::string &&title) {
+        create(width, height, title.c_str());
+    }
+
+    void Window::create(int width, int height, const char *title) {
+        destroy();
+        init();
+        if (defaultHints) {
+            glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+            glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+            glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        }
+        handle = glfwCreateWindow(width, height, title, nullptr, nullptr);
+        defaultHints = true;
+
+        glfwMakeContextCurrent(handle);
+
+        glfwSetFramebufferSizeCallback(handle, &resizeCallback);
+        glfwSetScrollCallback(handle, &scrollCallback);
+
+        glewInit();
+    }
+
     bool Window::shouldClose() const {
         return glfwWindowShouldClose(handle);
     }
 
     void Window::close() const {
         glfwSetWindowShouldClose(handle, true);
+    }
+
+    void Window::destroy() {
+        if (handle != nullptr) {
+            glfwDestroyWindow(handle);
+        }
+        handle = nullptr;
     }
 
     void Window::setTitle(const std::string &title) {

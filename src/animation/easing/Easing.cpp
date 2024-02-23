@@ -35,10 +35,14 @@ namespace zephyr::animation {
     }
 
     float Easing::current() {
+        if (function == nullptr)
+            return 0.0f;
         return function(value);
     }
 
     float Easing::next() {
+        if (function == nullptr)
+            return 0.0f;
         if (value >= 1.0f) {
             return function(1.0f);
         }

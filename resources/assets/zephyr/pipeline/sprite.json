@@ -1,0 +1,4 @@
+{
+    "vertex": "sprite.vs",
+    "fragment": "sprite.fs"
+}

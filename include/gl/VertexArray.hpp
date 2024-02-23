@@ -22,6 +22,7 @@ namespace zephyr::gl {
             void bind() const;
     };
 
+    void vertexFormat(GLuint index, GLint n, VertexAttributeType type, bool normal, GLuint offset);
     void vertexAttribPointer(GLuint index, GLint n, VertexAttributeType type, bool normal, GLsizei stride, GLint offset);
     void disableVertexAttribArray(GLuint index);
     

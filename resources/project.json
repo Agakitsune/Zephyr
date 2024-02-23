@@ -1,0 +1,12 @@
+{
+    "name": "Zephyr",
+    "description": "",
+    "creator": "Agakitsune",
+    "version": "0.1",
+    "window": {
+        "width": 960,
+        "height": 540,
+        "title": "WindowTest"
+    },
+    "tps": 60
+}

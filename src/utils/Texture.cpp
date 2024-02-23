@@ -1,5 +1,6 @@
 
 #include "gl/Texture.hpp"
+#include "utils/Texture.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -10,15 +11,8 @@
 
 namespace zephyr::utils {
 
-    gl::Texture loadTexture(const std::string &path) {
-        int width, height, channels;
-        unsigned char *data = stbi_load(path.c_str(), &width, &height, &channels, 0);
-        if (data == nullptr) {
-            throw std::runtime_error("Failed to load texture: " + path);
-        }
-
+    gl::Texture _loadTextureFromMemory(unsigned char *data, int width, int height, int channels) {
         #ifdef ZEPHYR_DEBUG
-            zephyr::debug("Texture") << "Loading: " << path << std::endl;
             zephyr::debug("Texture") << "Width: " << width << std::endl;
             zephyr::debug("Texture") << "Height: " << height << std::endl;
             zephyr::debug("Texture") << "Channels: " << channels << std::endl;
@@ -35,8 +29,33 @@ namespace zephyr::utils {
         else if (channels == 4)
             texture.data2D(0, gl::TextureInternalFormat::RGBA, width, height, gl::TextureFormat::RGBA, gl::TextureDataType::UnsignedByte, data);
         texture.generateMipmap();
-        stbi_image_free(data);
         return texture;
+    }
+
+    gl::Texture loadTexture(const std::string &path) {
+        int width, height, channels;
+        unsigned char *data = stbi_load(path.c_str(), &width, &height, &channels, 0);
+        if (data == nullptr) {
+            throw std::runtime_error("Failed to load texture: " + path);
+        }
+
+        #ifdef ZEPHYR_DEBUG
+            zephyr::debug("Texture") << "Loading: " << path << std::endl;
+        #endif
+
+        gl::Texture tex = _loadTextureFromMemory(data, width, height, channels);
+        stbi_image_free(data);
+        return tex;
+    }
+
+    
+
+    gl::Texture loadTextureFromMemory(unsigned char *data, int width, int height, int channels) {
+        #ifdef ZEPHYR_DEBUG
+            zephyr::debug("Texture") << "Loading from memory " << std::endl;
+        #endif
+
+        return _loadTextureFromMemory(data, width, height, channels);
     }
 
 }

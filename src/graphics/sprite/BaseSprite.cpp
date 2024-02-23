@@ -16,7 +16,7 @@ namespace zephyr::graphics {
     }
 
     void BaseSprite::setupBuffer(const zephyr::math::rect<int> &rect, const zephyr::math::vec2u &textureSize) {
-        _array.bind();
+        // _array.bind();
         _buffer.bind(gl::BufferTarget::ArrayBuffer);
 
         math::rect<float> uv = math::rect(
@@ -27,41 +27,41 @@ namespace zephyr::graphics {
         );
 
         float vertices[] = {
-            0.0f, 0.0f, 0.0f,                                                                                                       1.0f, 1.0f, 1.0f,       uv.getLeft(), uv.getTop(),
-            static_cast<float>(rect.getWidth() - rect.getLeft()), 0.0f, 0.0f,                                                       1.0f, 1.0f, 1.0f,       uv.getWidth(), uv.getTop(),
-            0.0f, static_cast<float>(rect.getHeight() - rect.getTop()), 0.0f,                                                       1.0f, 1.0f, 1.0f,       uv.getLeft(), uv.getHeight(),
-            static_cast<float>(rect.getWidth() - rect.getLeft()), static_cast<float>(rect.getHeight() - rect.getTop()), 0.0f,       1.0f, 1.0f, 1.0f,       uv.getWidth(), uv.getHeight()
-        };//Position                                                                                                                Color                   UV
+            0.0f, 0.0f,                                                                                                             uv.getLeft(), uv.getTop(),
+            static_cast<float>(rect.getWidth() - rect.getLeft()), 0.0f,                                                             uv.getWidth(), uv.getTop(),
+            0.0f, static_cast<float>(rect.getHeight() - rect.getTop()),                                                             uv.getLeft(), uv.getHeight(),
+            static_cast<float>(rect.getWidth() - rect.getLeft()), static_cast<float>(rect.getHeight() - rect.getTop()),             uv.getWidth(), uv.getHeight()
+        };//Position                                                                                                                UV
 
-        _buffer.data(vertices, usage());
+        _buffer.data(vertices, _usage);
     }
 
-    BaseSprite::BaseSprite(const BaseSprite &other) : _texture(other._texture) {
+    BaseSprite::BaseSprite(const BaseSprite &other) : _texture(other._texture), _usage(other._usage) {
         _buffer.bind(gl::BufferTarget::ArrayBuffer);
-        _buffer.data(other._buffer.getData().data(), other._buffer.size(), usage());
+        _buffer.data(other._buffer.getData().data(), other._buffer.size(), _usage);
     }
 
-    BaseSprite::BaseSprite(BaseSprite &&other) noexcept : _texture(std::move(other._texture)) {}
+    BaseSprite::BaseSprite(BaseSprite &&other) noexcept : _texture(std::move(other._texture)), _usage(other._usage) {}
 
-    BaseSprite::BaseSprite(const Texture &texture) : _texture(texture) {
+    BaseSprite::BaseSprite(const Texture &texture, gl::BufferUsage usage) : _texture(texture), _usage(usage) {
         setupBuffer();
     }
 
-    BaseSprite::BaseSprite(Texture &&texture) : _texture(std::move(texture)) {
+    BaseSprite::BaseSprite(Texture &&texture, gl::BufferUsage usage) : _texture(std::move(texture)), _usage(usage) {
         setupBuffer();
     }
 
-    BaseSprite::BaseSprite(const char *path) {
+    BaseSprite::BaseSprite(const char *path, gl::BufferUsage usage) : _usage(usage) {
         _texture = Texture(path);
         setupBuffer();
     }
 
-    BaseSprite::BaseSprite(const std::string &path) {
+    BaseSprite::BaseSprite(const std::string &path, gl::BufferUsage usage) : _usage(usage) {
         _texture = Texture(path);
         setupBuffer();
     }
 
-    BaseSprite::BaseSprite(const std::filesystem::path &path) {
+    BaseSprite::BaseSprite(const std::filesystem::path &path, gl::BufferUsage usage) : _usage(usage) {
         _texture = Texture(path);
         setupBuffer();
     }
@@ -181,7 +181,7 @@ namespace zephyr::graphics {
     }
 
     void BaseSprite::draw(const Window &window, const Pipeline &pipeline) const {
-        pipeline.set("Z", 0);
+        pipeline.set("Z", 0.f);
         window.drawPrimitive(gl::DrawMode::TriangleStrip, 0, 4);
     }
 
@@ -197,7 +197,7 @@ namespace zephyr::graphics {
         pipeline.set4x4("model", 1, true, &model[0][0]);
         pipeline.set("Texture", 0);
 
-        _array.bind();
+        _buffer.bindVertex(0, 0, 32);
     }
 
 } // namespace zephyr::graphics

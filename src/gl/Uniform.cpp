@@ -74,51 +74,51 @@ namespace zephyr::gl {
         glUniform4ui(location, v0, v1, v2, v3);
     }
 
-    void Uniform::set(GLsizei count, GLfloat *value) const {
+    void Uniform::set(GLsizei count, const GLfloat *value) const {
         glUniform1fv(location, count, value);
     }
 
-    void Uniform::set(GLsizei count, GLint *value) const {
+    void Uniform::set(GLsizei count, const GLint *value) const {
         glUniform1iv(location, count, value);
     }
 
-    void Uniform::set(GLsizei count, GLuint *value) const {
+    void Uniform::set(GLsizei count, const GLuint *value) const {
         glUniform1uiv(location, count, value);
     }
 
-    void Uniform::set2x2(GLsizei count, GLboolean transpose, GLfloat *value) const {
+    void Uniform::set2x2(GLsizei count, GLboolean transpose, const GLfloat *value) const {
         glUniformMatrix2fv(location, count, transpose, value);
     }
 
-    void Uniform::set3x3(GLsizei count, GLboolean transpose, GLfloat *value) const {
+    void Uniform::set3x3(GLsizei count, GLboolean transpose, const GLfloat *value) const {
         glUniformMatrix3fv(location, count, transpose, value);
     }
 
-    void Uniform::set4x4(GLsizei count, GLboolean transpose, GLfloat *value) const {
+    void Uniform::set4x4(GLsizei count, GLboolean transpose, const GLfloat *value) const {
         glUniformMatrix4fv(location, count, transpose, value);
     }
 
-    void Uniform::set2x3(GLsizei count, GLboolean transpose, GLfloat *value) const {
+    void Uniform::set2x3(GLsizei count, GLboolean transpose, const GLfloat *value) const {
         glUniformMatrix2x3fv(location, count, transpose, value);
     }
 
-    void Uniform::set3x2(GLsizei count, GLboolean transpose, GLfloat *value) const {
+    void Uniform::set3x2(GLsizei count, GLboolean transpose, const GLfloat *value) const {
         glUniformMatrix3x2fv(location, count, transpose, value);
     }
 
-    void Uniform::set2x4(GLsizei count, GLboolean transpose, GLfloat *value) const {
+    void Uniform::set2x4(GLsizei count, GLboolean transpose, const GLfloat *value) const {
         glUniformMatrix2x4fv(location, count, transpose, value);
     }
 
-    void Uniform::set4x2(GLsizei count, GLboolean transpose, GLfloat *value) const {
+    void Uniform::set4x2(GLsizei count, GLboolean transpose, const GLfloat *value) const {
         glUniformMatrix4x2fv(location, count, transpose, value);
     }
 
-    void Uniform::set3x4(GLsizei count, GLboolean transpose, GLfloat *value) const {
+    void Uniform::set3x4(GLsizei count, GLboolean transpose, const GLfloat *value) const {
         glUniformMatrix3x4fv(location, count, transpose, value);
     }
 
-    void Uniform::set4x3(GLsizei count, GLboolean transpose, GLfloat *value) const {
+    void Uniform::set4x3(GLsizei count, GLboolean transpose, const GLfloat *value) const {
         glUniformMatrix4x3fv(location, count, transpose, value);
     }
 

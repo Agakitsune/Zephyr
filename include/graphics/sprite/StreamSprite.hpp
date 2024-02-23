@@ -6,12 +6,14 @@
 namespace zephyr::graphics {
 
     class StreamSprite : public BaseSprite {
-        virtual gl::BufferUsage usage() const override {
-            return gl::BufferUsage::StreamDraw;
-        }
-        
         public:
-            using BaseSprite::BaseSprite;
+            StreamSprite(const Texture &texture);
+            StreamSprite(Texture &&texture);
+            StreamSprite(const char *path);
+            StreamSprite(const std::string &path);
+            StreamSprite(const std::filesystem::path &path);
+            StreamSprite(const StreamSprite &other) = default;
+            StreamSprite(StreamSprite &&other) noexcept = default;
 
             virtual ~StreamSprite() override {}
     };

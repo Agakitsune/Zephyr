@@ -16,25 +16,21 @@ namespace zephyr::graphics {
 
     class BaseSprite : public Transformable, public Drawable {
         Texture _texture;
-        gl::VertexArray _array;
         gl::Buffer _buffer;
-
-        virtual inline gl::BufferUsage usage() const {
-            return gl::BufferUsage::StaticDraw;
-        }
+        const gl::BufferUsage _usage;
 
         void setupBuffer();
         void setupBuffer(const zephyr::math::rect<int> &rect);
         void setupBuffer(const zephyr::math::rect<int> &rect, const zephyr::math::vec2u &textureSize);
 
         public:
+            BaseSprite(const Texture &texture, gl::BufferUsage usage);
+            BaseSprite(Texture &&texture, gl::BufferUsage usage);
+            BaseSprite(const char *path, gl::BufferUsage usage);
+            BaseSprite(const std::string &path, gl::BufferUsage usage);
+            BaseSprite(const std::filesystem::path &path, gl::BufferUsage usage);
             BaseSprite(const BaseSprite &other);
             BaseSprite(BaseSprite &&other) noexcept;
-            BaseSprite(const Texture &texture);
-            BaseSprite(Texture &&texture);
-            BaseSprite(const char *path);
-            BaseSprite(const std::string &path);
-            BaseSprite(const std::filesystem::path &path);
 
             virtual ~BaseSprite() = 0;
 

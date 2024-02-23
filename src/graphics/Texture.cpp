@@ -6,6 +6,10 @@ namespace zephyr::graphics {
 
     Texture::Texture() : _tex() {}
 
+    Texture::Texture(const gl::Texture &tex) : _tex(tex) {}
+
+    Texture::Texture(gl::Texture &&tex) : _tex(std::move(tex)) {}
+
     Texture::Texture(const Texture &other) : _tex(other._tex) {}
 
     Texture::Texture(Texture &&other) : _tex(std::move(other._tex)) {}

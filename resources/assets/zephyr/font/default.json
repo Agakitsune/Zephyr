@@ -1,0 +1,9 @@
+{
+    "texture": "font/ascii.png",
+    "size": {
+        "width": 8,
+        "height": 8
+    },
+    "origin": 7,
+    "spacing": 1
+}

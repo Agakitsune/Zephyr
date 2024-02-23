@@ -65,7 +65,7 @@ namespace zephyr::glfw {
     };
 
     class Window {
-        GLFWwindow *handle;
+        GLFWwindow *handle = nullptr;
 
         double xoffset = 0;
         double yoffset = 0;
@@ -87,6 +87,7 @@ namespace zephyr::glfw {
         public:
             static void terminate();
 
+            Window();
             Window(int width, int height, const std::string &title);
             Window(int width, int height, std::string &&title);
             Window(int width, int height, const char *title);
@@ -99,8 +100,13 @@ namespace zephyr::glfw {
             Window &operator=(const Window &other) = delete;
             Window &operator=(Window &&other) noexcept;
 
+            void create(int width, int height, const std::string &title);
+            void create(int width, int height, std::string &&title);
+            void create(int width, int height, const char *title);
+
             bool shouldClose() const;
             void close() const;
+            void destroy();
             
             void setTitle(const std::string &title);
             void setTitle(std::string &&title);
