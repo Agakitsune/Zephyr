@@ -196,6 +196,7 @@ namespace zephyr::graphics {
         
         pipeline.set4x4("model", 1, true, &model[0][0]);
         pipeline.set("Texture", 0);
+        pipeline.set("color", math::vec4f(getColor()) / 255.0f);
 
         _buffer.bindVertex(0, 0, 32);
     }

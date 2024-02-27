@@ -130,8 +130,16 @@ namespace zephyr::graphics {
         return _handle.isKeyPressed(key);
     }
 
+    bool Window::isKeyRepeated(const input::Key key) const {
+        return _handle.isKeyRepeated(key);
+    }
+
     bool Window::isKeyReleased(const input::Key key) const {
         return _handle.isKeyReleased(key);
+    }
+
+    bool Window::isKeyJustPressed(const input::Key key) const {
+        return _handle.isKeyJustPressed(key);
     }
 
     bool Window::isMouseButtonPressed(const input::MouseButton button) const {

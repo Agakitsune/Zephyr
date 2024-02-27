@@ -71,6 +71,7 @@ namespace zephyr::glfw {
         double yoffset = 0;
 
         input::JoystickDeadZone deadZones[input::Joystick::JoystickCount];
+        mutable bool pressure[GLFW_KEY_LAST];
 
         static Window *current;
 
@@ -136,7 +137,9 @@ namespace zephyr::glfw {
             void clear(gl::ClearMask mask) const;
 
             bool isKeyPressed(const input::Key key) const;
+            bool isKeyRepeated(const input::Key key) const;
             bool isKeyReleased(const input::Key key) const;
+            bool isKeyJustPressed(const input::Key key) const;
 
             bool isMouseButtonPressed(const input::MouseButton button) const;
             bool isMouseButtonReleased(const input::MouseButton button) const;

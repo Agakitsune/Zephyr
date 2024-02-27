@@ -3,6 +3,24 @@
 Zephyr is a powerful C++ game engine.
 It is designed to be simple and easy to use for beginners and allow advanced users to have full control over the engine.
 
+# Zephyr 0.15.0 - 27/02/2024
+
+### Added `isKeyRepeated` and `isKeyJustPressed`, made Sprite colorable
+
+* `zephyr::glfw`
+
+    * New method `isKeyRepeated()`
+
+    * New method `isKeyJustPressed()`
+
+* `zephyr::graphics`
+
+    * New method `isKeyRepeated()`
+
+    * New method `isKeyJustPressed()`
+
+    * Sprite is now `Colorable`
+
 # Zephyr 0.14.0 - 23/02/2024
 
 ### Added Text rendering, Registry, Core and `resources` directory, upgrade rendering pipeline

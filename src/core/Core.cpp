@@ -131,7 +131,6 @@ namespace zephyr {
         double current = 0;
         double timer = 0;
         double all = 0;
-        bool isPressed = false;
 
         double last = glfwGetTime();
 
@@ -157,11 +156,8 @@ namespace zephyr {
 
             _window.clear(zephyr::graphics::black_olive);
 
-            if (_window.isKeyPressed(input::Key::F3) && !isPressed) {
-                isPressed = true;
+            if (_window.isKeyJustPressed(input::Key::F3)) {
                 isDebug = !isDebug;
-            } else {
-                isPressed = _window.isKeyPressed(input::Key::F3);
             }
 
             if (isDebug)

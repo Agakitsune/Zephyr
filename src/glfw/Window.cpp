@@ -214,11 +214,25 @@ namespace zephyr::glfw {
     }
 
     bool Window::isKeyPressed(const input::Key key) const {
-        return glfwGetKey(handle, static_cast<int>(key)) == GLFW_PRESS;
+        pressure[static_cast<int>(key)] = glfwGetKey(handle, static_cast<int>(key));
+        return pressure[static_cast<int>(key)];
+    }
+
+    bool Window::isKeyRepeated(const input::Key key) const {
+        bool before = pressure[static_cast<int>(key)];
+        pressure[static_cast<int>(key)] = glfwGetKey(handle, static_cast<int>(key));
+        return before && pressure[static_cast<int>(key)];
     }
 
     bool Window::isKeyReleased(const input::Key key) const {
-        return glfwGetKey(handle, static_cast<int>(key)) == GLFW_RELEASE;
+        pressure[static_cast<int>(key)] = glfwGetKey(handle, static_cast<int>(key));
+        return !pressure[static_cast<int>(key)];
+    }
+
+    bool Window::isKeyJustPressed(const input::Key key) const {
+        bool before = !pressure[static_cast<int>(key)];
+        pressure[static_cast<int>(key)] = glfwGetKey(handle, static_cast<int>(key));
+        return before && pressure[static_cast<int>(key)];
     }
 
     bool Window::isMouseButtonPressed(const input::MouseButton button) const {

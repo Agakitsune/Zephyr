@@ -9,12 +9,13 @@
 #include "graphics/Transformable.hpp"
 #include "graphics/Texture.hpp"
 #include "graphics/Drawable.hpp"
+#include "graphics/Colorable.hpp"
 
 #include "math/rect.hpp"
 
 namespace zephyr::graphics {
 
-    class BaseSprite : public Transformable, public Drawable {
+    class BaseSprite : public Transformable, public Drawable, public Colorable {
         Texture _texture;
         gl::Buffer _buffer;
         const gl::BufferUsage _usage;
